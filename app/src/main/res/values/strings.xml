@@ -1,3 +1,5 @@
 <resources>
     <string name="app_name">ariadne</string>
+    <string name="app_label">ariadne</string>
+    <string name="search_hint">Enter where are you</string>
 </resources>

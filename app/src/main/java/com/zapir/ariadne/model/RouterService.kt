@@ -1,5 +1,6 @@
 package com.zapir.ariadne.model
 
+import com.zapir.ariadne.model.entity.Point
 import com.zapir.ariadne.model.entity.TextJson
 import io.reactivex.Single
 import retrofit2.http.GET
@@ -13,4 +14,6 @@ interface RouterService {
             @Query("q") query: String
     ): Single<TextJson>
 
+    @GET("points")
+    fun getPoints(): Single<List<Point>>
 }
