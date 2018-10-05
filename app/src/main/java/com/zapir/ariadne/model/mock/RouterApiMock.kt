@@ -11,10 +11,18 @@ class RouterApiMock {
 
     fun postText(query: String) = routerService.postText(query)
 
-    fun getPoints(): Single<List<Point>> {
+    fun getPoints(): Single<MutableList<Point>> {
         return Single
-                .just(listOf(Point(name = "into the hell"), Point(name = "na piki tochonie"), Point
-                (name = "k bekarevoy"), Point(name = "variantic")))
+                .just(mutableListOf(
+                        Point("into the hell", 5f, 10f),
+                        Point("na piki toche", 25f, 10f),
+                        Point("k bekareviioy", 45f, 10f),
+                        Point("into the hell", 5f,  45f),
+                        Point("na piki tocie", 25f, 45f),
+                        Point("k bekarejjvoy", 45f, 45f),
+                        Point("variantooooic", 25f, 25f)
+
+                ))
                 //.subscribeOn(Schedulers.io())
                 //.observeOn(schedulers.ui())
     }

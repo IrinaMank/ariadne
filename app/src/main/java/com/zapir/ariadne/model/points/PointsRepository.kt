@@ -8,5 +8,5 @@ import io.reactivex.Single
 class PointsRepository {
     private val api = RouterApiMock()
 
-    fun getPoints(): Single<List<Point>> = api.getPoints()
+    fun getPoints(): Single<MutableList<Point>> = api.getPoints()
 }
