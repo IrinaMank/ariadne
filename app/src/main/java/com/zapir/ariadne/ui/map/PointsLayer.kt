@@ -23,11 +23,12 @@ class PointsLayer(private val context: Context): MapBaseLayer(context) {
     override fun onTouch(event: MotionEvent) {
     }
 
-    override fun draw(canvas: Canvas, currentMatrix: Matrix, currentZoom: Float) {
+    override fun draw(canvas: Canvas, rectF: RectF, currentMatrix: Matrix, currentZoom: Float,
+                      scale: Float) {
         for (point in points) {
-            canvas.drawBitmap(pointBtm, point.x*dp, point.y*dp, null)
+            canvas.drawBitmap(pointBtm, rectF.left + point.x*scale, rectF.top + point.y*scale, null)
         }
-
+        //canvas.dra
     }
 
     fun drawableToBitmap(drawable: Drawable): Bitmap {

@@ -14,13 +14,13 @@ class RouterApiMock {
     fun getPoints(): Single<MutableList<Point>> {
         return Single
                 .just(mutableListOf(
-                        Point("into the hell", 5f, 10f),
-                        Point("na piki toche", 25f, 10f),
-                        Point("k bekareviioy", 45f, 10f),
-                        Point("into the hell", 5f,  45f),
-                        Point("na piki tocie", 25f, 45f),
-                        Point("k bekarejjvoy", 45f, 45f),
-                        Point("variantooooic", 25f, 25f)
+                        Point("into the hell", 50f, 100f),
+                        Point("na piki toche", 250f, 100f),
+                        Point("k bekareviioy", 450f, 100f),
+                        Point("into the hell", 50f,  450f),
+                        Point("na piki tocie", 250f, 450f),
+                        Point("k bekarejjvoy", 450f, 450f),
+                        Point("variantooooic", 250f, 250f)
 
                 ))
                 //.subscribeOn(Schedulers.io())

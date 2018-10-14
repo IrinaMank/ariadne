@@ -3,6 +3,7 @@ package com.zapir.ariadne.ui.map
 import android.content.Context
 import android.graphics.Canvas
 import android.graphics.Matrix
+import android.graphics.RectF
 import android.util.TypedValue
 import android.view.MotionEvent
 
@@ -23,5 +24,7 @@ abstract class MapBaseLayer(private val context: Context) {
      * @param currentZoom
      * @param currentRotateDegrees
      */
-    abstract fun draw(canvas: Canvas, currentMatrix: Matrix, currentZoom: Float)
+    abstract fun draw(canvas: Canvas, rect: RectF, currentMatrix: Matrix, currentZoom: Float,
+                      scale:
+    Float)
 }
