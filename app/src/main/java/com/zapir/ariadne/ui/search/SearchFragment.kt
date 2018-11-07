@@ -13,7 +13,13 @@ import com.zapir.ariadne.ui.list.PointsAdapter
 import kotlinx.android.synthetic.main.fragment_search.*
 import android.text.Editable
 import android.text.TextWatcher
-
+import com.zapir.ariadne.ui.main.MainActivity
+import android.support.v4.view.MenuItemCompat.getActionView
+import android.content.Context.SEARCH_SERVICE
+import android.app.SearchManager
+import android.content.Context
+import android.view.Menu
+import android.view.MenuInflater
 
 class SearchFragment: BaseFragment(), SearchView {
 
@@ -40,22 +46,16 @@ class SearchFragment: BaseFragment(), SearchView {
         points_rv.layoutManager = LinearLayoutManager(context)
         points_rv.adapter = this@SearchFragment.adapter
 
-        search_et.addTextChangedListener(object : TextWatcher {
-
-            override fun afterTextChanged(s: Editable) {
-
+        search_et.addTextChangedListener(object: TextWatcher {
+            override fun afterTextChanged(p0: Editable?) {
+                adapter.filter.filter(p0)
             }
 
-            override fun beforeTextChanged(s: CharSequence, start: Int,
-                                           count: Int, after: Int) {
+            override fun beforeTextChanged(p0: CharSequence?, p1: Int, p2: Int, p3: Int) {
             }
 
-            override fun onTextChanged(s: CharSequence, start: Int,
-                                       before: Int, count: Int) {
-
-                adapter.filter.filter(s)
+            override fun onTextChanged(p0: CharSequence?, p1: Int, p2: Int, p3: Int) {
             }
         })
     }
-
 }
