@@ -1,19 +1,22 @@
 package com.zapir.ariadne.model
 
-import com.zapir.ariadne.model.entity.Point
-import com.zapir.ariadne.model.entity.TextJson
+import com.zapir.ariadne.model.entity.Building
+import com.zapir.ariadne.model.entity.Waypoint
 import io.reactivex.Single
+import retrofit2.Call
+import retrofit2.Callback
 import retrofit2.http.GET
-import retrofit2.http.Query
+import retrofit2.http.Path
 
 interface RouterService {
 
     //ToDo
-    @GET("test")
-    fun postText(
-            @Query("q") query: String
-    ): Single<TextJson>
+//    @GET("/points/2/")
+//    fun getPoint(): Single<Waypoint>
+//
+//    @GET("/points")
+//    fun getPoints(): Single<List<Waypoint>>
 
-    @GET("points")
-    fun getPoints(): Single<List<Point>>
+    @GET("/")
+    fun getBuilding(): Single<Building>
 }

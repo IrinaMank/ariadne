@@ -1,7 +1,7 @@
 package com.zapir.ariadne.presenter.search
 
 import com.arellomobile.mvp.InjectViewState
-import com.zapir.ariadne.model.entity.Point
+import com.zapir.ariadne.model.entity.Waypoint
 import com.zapir.ariadne.model.points.PointsRepository
 import com.zapir.ariadne.presenter.BasePresenter
 
@@ -12,22 +12,22 @@ class SearchPresenter : BasePresenter<SearchView>() {
     override fun onFirstViewAttach() {
         super.onFirstViewAttach()
 
-        pointsInteractor.getPoints()
-                .subscribe(
-                {
-                    viewState.showPoints(it)
-                },
-                {
-
-                }
-        ).connect()
+//        pointsInteractor.getPoints()
+//                .subscribe(
+//                {
+//                    viewState.showPoints(it)
+//                },
+//                {
+//
+//                }
+//        ).connect()
     }
 
     fun search(text: CharSequence) {
 
     }
 
-    fun choosePoint(point: Point) {
+    fun choosePoint(waypoint: Waypoint) {
 
     }
 }

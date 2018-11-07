@@ -6,6 +6,10 @@ apply plugin: 'kotlin-android-extensions'
 
 apply plugin: 'kotlin-kapt'
 
+androidExtensions {
+    experimental = true
+}
+
 android {
     compileSdkVersion 28
     defaultConfig {
@@ -51,13 +55,10 @@ dependencies {
     /* Network */
     implementation "com.squareup.okhttp3:okhttp:3.11.0"
     implementation "com.squareup.okhttp3:logging-interceptor:3.10.0"
-    implementation "com.squareup.retrofit2:converter-jackson:2.4.0"
+    implementation "com.squareup.retrofit2:converter-gson:2.4.0"
     implementation 'com.squareup.retrofit2:adapter-rxjava2:2.4.0'
 
-    implementation "com.fasterxml.jackson.core:jackson-core:2.9.4"
-    implementation "com.fasterxml.jackson.core:jackson-annotations:2.9.4"
-    implementation "com.fasterxml.jackson.core:jackson-databind:2.9.4"
-    implementation "com.fasterxml.jackson.module:jackson-module-kotlin:2.9.4"
+    implementation "com.google.code.gson:gson:2.8.5"
 
     /* Room */
     implementation "android.arch.persistence.room:runtime:1.1.1"
