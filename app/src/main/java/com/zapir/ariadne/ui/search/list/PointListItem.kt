@@ -1,4 +1,4 @@
-package com.zapir.ariadne.ui.list
+package com.zapir.ariadne.ui.search.list
 
 import com.zapir.ariadne.model.entity.Point
 

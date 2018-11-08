@@ -1,9 +1,6 @@
 apply plugin: 'com.android.application'
-
 apply plugin: 'kotlin-android'
-
 apply plugin: 'kotlin-android-extensions'
-
 apply plugin: 'kotlin-kapt'
 
 android {
@@ -64,12 +61,16 @@ dependencies {
     implementation "android.arch.persistence.room:rxjava2:1.1.1"
     kapt "android.arch.persistence.room:compiler:1.1.1"
 
-    /* MVP Moxy */
-    kapt  "com.arello-mobile:moxy-compiler:$moxyVersion"
-    implementation "com.arello-mobile:moxy-app-compat:$moxyVersion"
+    /* ViewModel */
+    implementation "android.arch.lifecycle:extensions:1.1.1"
 
     /* Picasso */
     implementation 'com.squareup.picasso:picasso:2.71828'
+
+    // Koin for Android
+    compile 'org.koin:koin-android:1.0.1'
+    // or Koin for Android Architecture ViewModel
+    compile 'org.koin:koin-android-viewmodel:1.0.1'
 
     implementation 'com.github.bumptech.glide:glide:4.7.1'
     annotationProcessor 'com.github.bumptech.glide:compiler:4.7.1'

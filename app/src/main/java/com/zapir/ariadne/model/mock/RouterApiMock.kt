@@ -1,8 +1,7 @@
 package com.zapir.ariadne.model.mock
 
-import com.zapir.ariadne.model.RetrofitServiceFactory
+import com.zapir.ariadne.model.remote.RetrofitServiceFactory
 import com.zapir.ariadne.model.entity.Point
-import io.reactivex.Scheduler
 import io.reactivex.Single
 
 class RouterApiMock {

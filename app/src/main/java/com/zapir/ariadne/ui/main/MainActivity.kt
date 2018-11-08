@@ -13,6 +13,9 @@ import com.zapir.ariadne.ui.search.SearchFragment
 import android.support.v4.view.MenuItemCompat
 import android.support.v4.view.MenuItemCompat.setOnActionExpandListener
 import android.support.v7.widget.SearchView
+import com.zapir.ariadne.presenter.di.uiModule
+import org.koin.android.ext.android.getKoin
+import org.koin.android.ext.android.startKoin
 
 
 class MainActivity : AppCompatActivity() {
@@ -27,6 +30,7 @@ class MainActivity : AppCompatActivity() {
                 .replace(R.id.container, MainFragment())
                 .commitNow()
 
+        startKoin(context = applicationContext, modules = listOf(uiModule))
     }
 
 }

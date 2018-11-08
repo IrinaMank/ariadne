@@ -1,6 +1,5 @@
-package com.zapir.ariadne.ui.list
+package com.zapir.ariadne.ui.search.list
 
-import android.support.v4.text.HtmlCompat
 import android.util.Log
 import android.view.View
 import android.view.ViewGroup
