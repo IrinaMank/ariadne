@@ -10,9 +10,9 @@ class RouterApiMock {
 
     fun postText(query: String) = routerService.postText(query)
 
-    fun getPoints(): Single<MutableList<Point>> {
+    fun getPoints(): Single<List<Point>> {
         return Single
-                .just(mutableListOf(
+                .just(listOf(
                         Point("into the hell", 50f, 100f),
                         Point("na piki toche", 250f, 100f),
                         Point("k bekareviioy", 450f, 100f),
