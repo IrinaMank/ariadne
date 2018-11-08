@@ -8,7 +8,9 @@ import com.zapir.ariadne.ui.search.list.PointsAdapter
 import android.text.Editable
 import android.text.TextWatcher
 import android.arch.lifecycle.Observer
+import com.zapir.ariadne.model.entity.Point
 import com.zapir.ariadne.presenter.search.SearchViewModel
+import com.zapir.ariadne.ui.route.RouteFragment
 import kotlinx.android.synthetic.main.fragment_search.*
 import org.koin.android.ext.android.inject
 import org.koin.android.viewmodel.ext.android.sharedViewModel
@@ -20,9 +22,15 @@ class SearchFragment: BaseFragment() {
         get() = R.layout.fragment_search
 
     private val viewModel: SearchViewModel by sharedViewModel()
+    private val direction: String? by lazy { arguments?.getString("direction") }
 
-    val adapter: PointsAdapter by lazy { PointsAdapter { viewModel.choosePoint(it)
-    activity?.supportFragmentManager?.popBackStack()}  }
+    val adapter: PointsAdapter by lazy { PointsAdapter {
+        if (direction == "from") {
+            viewModel.chooseFromPoint(it)
+        } else {
+            viewModel.chooseToPoint(it)
+        }
+        activity?.supportFragmentManager?.popBackStack()}  }
 
     override fun onActivityCreated(savedInstanceState: Bundle?) {
         super.onActivityCreated(savedInstanceState)
@@ -45,5 +53,16 @@ class SearchFragment: BaseFragment() {
             override fun onTextChanged(p0: CharSequence?, p1: Int, p2: Int, p3: Int) {
             }
         })
+    }
+
+    companion object {
+        fun startIntent(direction: String): BaseFragment {
+            val bundle = Bundle()
+            bundle.putString("direction", direction)
+            val fragment = SearchFragment()
+            fragment.arguments = bundle
+            return fragment
+        }
+
     }
 }

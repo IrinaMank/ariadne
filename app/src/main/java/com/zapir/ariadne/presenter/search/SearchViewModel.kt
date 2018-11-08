@@ -3,7 +3,7 @@ package com.zapir.ariadne.presenter.search
 import android.arch.lifecycle.MutableLiveData
 import android.arch.lifecycle.ViewModel
 import com.zapir.ariadne.model.entity.Point
-import com.zapir.ariadne.model.points.PointsRepository
+import com.zapir.ariadne.model.repositories.PointsRepository
 
 class SearchViewModel : ViewModel() {
     private val pointsInteractor = PointsRepository()
@@ -23,7 +23,11 @@ class SearchViewModel : ViewModel() {
                             }
                     )
 
-    fun choosePoint(point: Point) {
+    fun chooseFromPoint(point: Point) {
         from.postValue(point)
+    }
+
+    fun chooseToPoint(point: Point) {
+        to.postValue(point)
     }
 }
