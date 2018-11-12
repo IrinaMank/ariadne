@@ -21,7 +21,7 @@ import org.koin.experimental.builder.single
 val modelModule = module {
     single { RouterApi() }
     single { Room.databaseBuilder(androidContext(), NstuDatabase::class.java, NstuDatabase::class.java
-            .simpleName).build() }
+            .simpleName).fallbackToDestructiveMigration().build() } //development migration mode
     single { get<NstuDatabase>().pointDao() }
     single { get<NstuDatabase>().cashDao() }
     single<PointCache>()
