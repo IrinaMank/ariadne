@@ -4,16 +4,21 @@ import android.arch.lifecycle.MutableLiveData
 import android.arch.lifecycle.ViewModel
 import com.zapir.ariadne.model.entity.Point
 import com.zapir.ariadne.model.repositories.PointsRepository
+import io.reactivex.android.schedulers.AndroidSchedulers
+import io.reactivex.schedulers.Schedulers
 
-class SearchViewModel : ViewModel() {
-    private val pointsInteractor = PointsRepository()
+class SearchViewModel(
+        private val interactor: PointsRepository
+) : ViewModel() {
 
     var from = MutableLiveData<Point>()
     var to = MutableLiveData<Point>()
     var points = MutableLiveData<List<Point>>()
 
     fun getPoints() =
-            pointsInteractor.getPoints()
+            interactor.getPoints()
+                    .subscribeOn(Schedulers.io())
+                    .observeOn(AndroidSchedulers.mainThread())
                     .subscribe(
                             {
                                 points.postValue(it)
