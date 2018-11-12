@@ -19,7 +19,7 @@ class MainFragment: BaseFragment() {
                     .beginTransaction()
                     .replace(R.id.container, MainFragment())
                     .commit()
-        }
+        }//ToDo: remove !!
 
         search_fragment_btn.setOnClickListener {
             activity!!.supportFragmentManager

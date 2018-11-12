@@ -9,5 +9,5 @@ class RouteInteractor(
         private val repository: PointsRepository
 ) {
     fun createRoute(from: Point, to: Point) =
-           listOf<Point>(Point("dlkf"), Point("dlkf"), Point("dlkf"))
+           listOf<Point>(Point("dlkf"), Point("dlkf"), Point("dlkf"))//ToDo: create algorithm
 }

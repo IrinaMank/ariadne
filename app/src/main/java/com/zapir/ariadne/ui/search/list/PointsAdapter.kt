@@ -58,7 +58,7 @@ class PointsAdapter(private val clickListener: (Point) -> Unit) :
                 val results = FilterResults()
                 results.values = itemPoints
                 return results
-            }
+            }//ToDo: make adapter smarter
 
             override fun publishResults(constraint: CharSequence?, results: FilterResults?) {
                 Log.e("NotificationActivity", " result ${constraint.toString()}")

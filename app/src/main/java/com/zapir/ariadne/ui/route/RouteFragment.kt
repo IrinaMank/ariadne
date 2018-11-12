@@ -16,7 +16,7 @@ class RouteFragment: BaseFragment() {
         get() = R.layout.fragment_route
 
     val viewModel: RouteViewModel by inject()
-    val from: Point? by lazy { arguments?.getParcelable("from") as Point }
+    val from: Point? by lazy { arguments?.getParcelable("from") as Point }//ToDO: remove hardcode
     val to: Point? by lazy { arguments?.getParcelable("to") as Point }
 
     override fun onActivityCreated(savedInstanceState: Bundle?) {

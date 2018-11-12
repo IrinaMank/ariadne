@@ -22,7 +22,7 @@ class RouterApiMock {
                         Point("variantooooic", 250f, 250f)
 
                 ))
-                //.subscribeOn(Schedulers.io())
-                //.observeOn(schedulers.ui())
+//                .subscribeOn(Schedulers.io())
+//                .observeOn(schedulers.ui())//ToDO: add schedulers
     }
 }

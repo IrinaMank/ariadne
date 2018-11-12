@@ -6,6 +6,7 @@ import java.util.*
 
 class PointMapper {
 
+    //ToDo: id from server
     fun fromRemoteToCache(remote: Point) =
             PointEntity(
                     UUID.randomUUID().toString(),

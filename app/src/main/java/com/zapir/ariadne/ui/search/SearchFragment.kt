@@ -22,7 +22,8 @@ class SearchFragment: BaseFragment() {
         get() = R.layout.fragment_search
 
     private val viewModel: SearchViewModel by sharedViewModel()
-    private val direction: String? by lazy { arguments?.getString("direction") }
+    private val direction: String? by lazy { arguments?.getString("direction") }//ToDo: remove
+    // hardcode
 
     val adapter: PointsAdapter by lazy { PointsAdapter {
         if (direction == "from") {

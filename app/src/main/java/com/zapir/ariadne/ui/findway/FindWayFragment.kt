@@ -26,7 +26,7 @@ class FindWayFragment: BaseFragment() {
 
         textview.setOnClickListener { onFromTextViewClicked() }
         textview2.setOnClickListener { onToTextViewClicked() }
-        textview.text = "Default"
+        textview.text = "Default"//ToDo: remove hardcode
         pointsViewModel.from.observe(this, Observer {
             textview.text = it?.name
         })// создаем подписчика на изменения данных
@@ -52,8 +52,8 @@ class FindWayFragment: BaseFragment() {
     private fun onFromTextViewClicked() {
         activity?.supportFragmentManager
                 ?.beginTransaction()
-                ?.replace(R.id.container, SearchFragment.startIntent("from"))//фу фу хардкод.
-                // Потом тут будут константы
+                ?.replace(R.id.container, SearchFragment.startIntent("from"))//ToDO: remove
+                // hardcode
                 ?.addToBackStack(null)
                 ?.commit()
     }

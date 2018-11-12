@@ -8,7 +8,7 @@ import retrofit2.http.Query
 
 interface RouterService {
 
-    //ToDo
+    //ToDo: add real queries
     @GET("test")
     fun postText(
             @Query("q") query: String
