@@ -4,6 +4,8 @@ import android.os.Bundle
 import com.arellomobile.mvp.presenter.InjectPresenter
 import com.arellomobile.mvp.presenter.ProvidePresenter
 import com.zapir.ariadne.R
+import com.zapir.ariadne.model.entity.Waypoint
+import com.zapir.ariadne.model.points.PointsRepository
 import com.zapir.ariadne.presenter.main.MainPresenter
 import com.zapir.ariadne.presenter.main.MainView
 import com.zapir.ariadne.presenter.search.SearchPresenter
@@ -26,7 +28,7 @@ class MainFragment: BaseFragment(), MainView {
 
     override fun onActivityCreated(savedInstanceState: Bundle?) {
         super.onActivityCreated(savedInstanceState)
-
+        var lwp = PointsRepository().getBuilding()
         main_fragment_btn.setOnClickListener {
             activity!!.supportFragmentManager
                     .beginTransaction()

@@ -1,29 +1,17 @@
 package com.zapir.ariadne.ui.map
 
-import android.R.attr.centerY
-import android.R.attr.centerX
 import android.content.Context
-import android.view.View.MeasureSpec
 import android.graphics.drawable.Drawable
 import com.bumptech.glide.Glide
-import com.bumptech.glide.load.resource.bitmap.TransformationUtils.centerCrop
-import android.icu.lang.UScript.getShortName
-import android.support.v4.content.ContextCompat
-import android.text.TextPaint
-import android.support.v4.view.ViewCompat.setLayerType
 import android.os.Build
-import android.content.res.TypedArray
 import android.graphics.*
 import android.util.AttributeSet
 import android.support.v7.widget.AppCompatImageView
 import android.view.View
-import com.bumptech.glide.load.engine.GlideException
-import com.bumptech.glide.request.RequestListener
 import com.bumptech.glide.request.target.SimpleTarget
 import com.bumptech.glide.request.transition.Transition
 import com.zapir.ariadne.R
-import com.zapir.ariadne.model.entity.Point
-import javax.sql.DataSource
+import com.zapir.ariadne.model.entity.Waypoint
 
 
 class MapImageView : AppCompatImageView {
@@ -121,9 +109,9 @@ class MapImageView : AppCompatImageView {
         }
     }
 
-    fun loadPoints(points: MutableList<Point>) {
+    fun loadPoints(waypoints: MutableList<Waypoint>) {
         val layer = PointsLayer(context)
-        layer.setPoints(points)
+        layer.setPoints(waypoints)
         addLayer(layer)
     }
 

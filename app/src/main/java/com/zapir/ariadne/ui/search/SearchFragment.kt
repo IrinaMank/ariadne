@@ -5,7 +5,7 @@ import android.support.v7.widget.LinearLayoutManager
 import com.arellomobile.mvp.presenter.InjectPresenter
 import com.arellomobile.mvp.presenter.ProvidePresenter
 import com.zapir.ariadne.R
-import com.zapir.ariadne.model.entity.Point
+import com.zapir.ariadne.model.entity.Waypoint
 import com.zapir.ariadne.presenter.search.SearchPresenter
 import com.zapir.ariadne.presenter.search.SearchView
 import com.zapir.ariadne.ui.base.BaseFragment
@@ -13,17 +13,10 @@ import com.zapir.ariadne.ui.list.PointsAdapter
 import kotlinx.android.synthetic.main.fragment_search.*
 import android.text.Editable
 import android.text.TextWatcher
-import com.zapir.ariadne.ui.main.MainActivity
-import android.support.v4.view.MenuItemCompat.getActionView
-import android.content.Context.SEARCH_SERVICE
-import android.app.SearchManager
-import android.content.Context
-import android.view.Menu
-import android.view.MenuInflater
 
 class SearchFragment: BaseFragment(), SearchView {
 
-    override fun showPoints(list: List<Point>) {
+    override fun showPoints(list: List<Waypoint>) {
         adapter.setData(list)
     }
 
