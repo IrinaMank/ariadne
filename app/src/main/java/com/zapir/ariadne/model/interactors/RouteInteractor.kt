@@ -1,6 +1,6 @@
 package com.zapir.ariadne.model.interactors
 
-import com.zapir.ariadne.model.entity.Point
+import com.zapir.ariadne.model.entity.Waypoint
 import com.zapir.ariadne.model.repositories.PointsRepository
 
 //Здесь будет лежать наш алогритм. Он берет список всех точек из репозитория и возвращает
@@ -8,6 +8,6 @@ import com.zapir.ariadne.model.repositories.PointsRepository
 class RouteInteractor(
         private val repository: PointsRepository
 ) {
-    fun createRoute(from: Point, to: Point) =
-           listOf<Point>(Point("dlkf"), Point("dlkf"), Point("dlkf"))//ToDo: create algorithm
+    fun createRoute(from: Waypoint, to: Waypoint) =
+           listOf<Waypoint>()//ToDo: create algorithm
 }

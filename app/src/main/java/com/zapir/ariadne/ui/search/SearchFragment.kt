@@ -3,12 +3,12 @@ package com.zapir.ariadne.ui.search
 import android.os.Bundle
 import android.support.v7.widget.LinearLayoutManager
 import com.zapir.ariadne.R
+import com.zapir.ariadne.model.entity.Waypoint
 import com.zapir.ariadne.ui.base.BaseFragment
 import com.zapir.ariadne.ui.search.list.PointsAdapter
 import android.text.Editable
 import android.text.TextWatcher
 import android.arch.lifecycle.Observer
-import com.zapir.ariadne.model.entity.Point
 import com.zapir.ariadne.presenter.search.SearchViewModel
 import com.zapir.ariadne.ui.route.RouteFragment
 import kotlinx.android.synthetic.main.fragment_search.*

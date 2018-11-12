@@ -2,7 +2,7 @@ package com.zapir.ariadne.presenter.search
 
 import android.arch.lifecycle.MutableLiveData
 import android.arch.lifecycle.ViewModel
-import com.zapir.ariadne.model.entity.Point
+import com.zapir.ariadne.model.entity.Waypoint
 import com.zapir.ariadne.model.repositories.PointsRepository
 import io.reactivex.android.schedulers.AndroidSchedulers
 import io.reactivex.schedulers.Schedulers
@@ -11,9 +11,9 @@ class SearchViewModel(
         private val interactor: PointsRepository
 ) : ViewModel() {
 
-    var from = MutableLiveData<Point>()
-    var to = MutableLiveData<Point>()
-    var points = MutableLiveData<List<Point>>()
+    var from = MutableLiveData<Waypoint>()
+    var to = MutableLiveData<Waypoint>()
+    var points = MutableLiveData<List<Waypoint>>()
 
     fun getPoints() =
             interactor.getPoints()
@@ -24,15 +24,16 @@ class SearchViewModel(
                                 points.postValue(it)
                             },
                             {
+                                print(it.message)
 
                             }
                     )
 
-    fun chooseFromPoint(point: Point) {
-        from.postValue(point)
+    fun chooseFromPoint(Waypoint: Waypoint) {
+        from.postValue(Waypoint)
     }
 
-    fun chooseToPoint(point: Point) {
-        to.postValue(point)
+    fun chooseToPoint(Waypoint: Waypoint) {
+        to.postValue(Waypoint)
     }
 }

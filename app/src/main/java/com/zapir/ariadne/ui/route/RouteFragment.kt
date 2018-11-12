@@ -4,7 +4,7 @@ import android.arch.lifecycle.Observer
 import android.os.Bundle
 import android.os.Parcelable
 import com.zapir.ariadne.R
-import com.zapir.ariadne.model.entity.Point
+import com.zapir.ariadne.model.entity.Waypoint
 import com.zapir.ariadne.presenter.route.RouteViewModel
 import com.zapir.ariadne.ui.base.BaseFragment
 import kotlinx.android.synthetic.main.fragment_findway.*
@@ -16,8 +16,8 @@ class RouteFragment: BaseFragment() {
         get() = R.layout.fragment_route
 
     val viewModel: RouteViewModel by inject()
-    val from: Point? by lazy { arguments?.getParcelable("from") as Point }//ToDO: remove hardcode
-    val to: Point? by lazy { arguments?.getParcelable("to") as Point }
+    val from: Waypoint? by lazy { arguments?.getParcelable("from") as Waypoint }//ToDO: remove hardcode
+    val to: Waypoint? by lazy { arguments?.getParcelable("to") as Waypoint }
 
     override fun onActivityCreated(savedInstanceState: Bundle?) {
         super.onActivityCreated(savedInstanceState)
@@ -31,7 +31,7 @@ class RouteFragment: BaseFragment() {
     }
 
     companion object {
-        fun startIntent(from: Point?, to: Point?): BaseFragment {
+        fun startIntent(from: Waypoint?, to: Waypoint?): BaseFragment {
             val bundle = Bundle()
             bundle.putParcelable("from", from)
             bundle.putParcelable("to", to)

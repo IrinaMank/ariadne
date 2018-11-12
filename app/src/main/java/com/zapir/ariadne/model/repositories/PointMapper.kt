@@ -1,24 +1,29 @@
 package com.zapir.ariadne.model.repositories
 
 import com.zapir.ariadne.model.cache.entity.PointEntity
-import com.zapir.ariadne.model.entity.Point
+import com.zapir.ariadne.model.entity.Waypoint
+import com.zapir.ariadne.model.entity.common.Point
 import java.util.*
 
 class PointMapper {
 
     //ToDo: id from server
-    fun fromRemoteToCache(remote: Point) =
+    fun fromRemoteToCache(remote: Waypoint) =
             PointEntity(
-                    UUID.randomUUID().toString(),
+                    remote.id,
                     remote.name,
-                    remote.x,
-                    remote.y
+                    remote.coordinates.x,
+                    remote.coordinates.y,
+                    remote.type,
+                    remote.relatedPoints
             )
 
     fun fromCacheToRemote(cache: PointEntity) =
-            Point(
+            Waypoint(
+                    cache.id,
                     cache.name,
-                    cache.x,
-                    cache.y
+                    Point(cache.x, cache.y),
+                    cache.type,
+                    cache.relatedPoints
             )
 }

@@ -5,7 +5,7 @@
 //import android.util.AttributeSet
 //import android.graphics.Bitmap
 //import android.view.View
-//import com.zapir.ariadne.model.entity.Point
+//import com.zapir.ariadne.model.entity.Waypoint
 //
 //
 //class MapView(context: Context, attrs: AttributeSet): View(context, attrs) {
@@ -25,7 +25,7 @@
 //        invalidate()
 //    }
 //
-//    fun loadPoints(points: MutableList<Point>) {
+//    fun loadPoints(points: MutableList<Waypoint>) {
 //        val layer = PointsLayer(context)
 //        layer.setPoints(points)
 //        addLayer(layer)

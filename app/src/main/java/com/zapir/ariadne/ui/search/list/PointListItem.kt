@@ -1,5 +1,5 @@
 package com.zapir.ariadne.ui.search.list
 
-import com.zapir.ariadne.model.entity.Point
+import com.zapir.ariadne.model.entity.Waypoint
 
-data class PointListItem(val point: Point)
+data class PointListItem(val point: Waypoint)

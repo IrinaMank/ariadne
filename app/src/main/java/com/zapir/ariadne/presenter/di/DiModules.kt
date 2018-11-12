@@ -25,7 +25,7 @@ val modelModule = module {
     single { get<NstuDatabase>().pointDao() }
     single { get<NstuDatabase>().cashDao() }
     single<PointCache>()
-    single { PointsRepository(RouterApiMock(), get()) }
+    single { PointsRepository(RouterApi(), get()) }
     single { RouteInteractor(get()) }
 }
 val uiModule = module {

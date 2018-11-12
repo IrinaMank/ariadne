@@ -5,13 +5,13 @@ import android.view.View
 import android.view.ViewGroup
 import android.widget.Filter
 import android.widget.Filterable
-import com.zapir.ariadne.model.entity.Point
+import com.zapir.ariadne.model.entity.Waypoint
 import android.support.v7.widget.RecyclerView
 import android.view.LayoutInflater
 import com.zapir.ariadne.R
 import kotlinx.android.synthetic.main.item_point.view.*
 
-class PointsAdapter(private val clickListener: (Point) -> Unit) :
+class PointsAdapter(private val clickListener: (Waypoint) -> Unit) :
         RecyclerView.Adapter<PointsAdapter.ViewHolder>(),
         Filterable {
 
@@ -29,11 +29,11 @@ class PointsAdapter(private val clickListener: (Point) -> Unit) :
         holder.bind(alert)
     }
 
-    fun setData(points: List<Point>) {
+    fun setData(waypoints: List<Waypoint>) {
         itemPoints.clear()
-        itemPoints.addAll(points.map { PointListItem(it) })
+        itemPoints.addAll(waypoints.map { PointListItem(it) })
         finallyItemPoints.clear()
-        finallyItemPoints.addAll(points.map { PointListItem(it) })
+        finallyItemPoints.addAll(waypoints.map { PointListItem(it) })
 
         notifyDataSetChanged()
     }
@@ -68,16 +68,16 @@ class PointsAdapter(private val clickListener: (Point) -> Unit) :
         }
     }
 
-    class ViewHolder(val view: View, clickListener: (Point) -> Unit) : RecyclerView.ViewHolder(view) {
-        private lateinit var point: Point
+    class ViewHolder(val view: View, clickListener: (Waypoint) -> Unit) : RecyclerView.ViewHolder(view) {
+        private lateinit var waypoint: Waypoint
 
         init {
-            view.setOnClickListener { clickListener.invoke(point) }
+            view.setOnClickListener { clickListener.invoke(waypoint) }
         }
 
-        fun bind(point: Point) {
-            this.point = point
-            view.item_point_tv.text = point.name
+        fun bind(waypoint: Waypoint) {
+            this.waypoint = waypoint
+            view.item_point_tv.text = waypoint.name
 
         }
     }

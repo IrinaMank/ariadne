@@ -7,11 +7,11 @@ import org.slf4j.Logger
 import org.slf4j.LoggerFactory
 import retrofit2.Retrofit
 import retrofit2.adapter.rxjava2.RxJava2CallAdapterFactory
-import retrofit2.converter.jackson.JacksonConverterFactory
+import retrofit2.converter.gson.GsonConverterFactory
 
 object RetrofitServiceFactory {
 
-    private const val URL_ENDPOINT = ""//ToDo
+    private const val URL_ENDPOINT = "https://simple-mobile-api.herokuapp.com"//ToDo
 
     val routerService: RouterService by lazy { retrofit.create(RouterService::class
             .java) }
@@ -28,7 +28,7 @@ object RetrofitServiceFactory {
                     .baseUrl(URL_ENDPOINT)
                     .client(okHttpClient)
                     .addCallAdapterFactory(RxJava2CallAdapterFactory.createWithScheduler(Schedulers.io()))
-                    .addConverterFactory(JacksonConverterFactory.create())
+                    .addConverterFactory(GsonConverterFactory.create())
                     .build()
 
     private fun createOkHttpClient(): OkHttpClient =
