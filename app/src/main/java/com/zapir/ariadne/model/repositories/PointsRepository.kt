@@ -26,4 +26,13 @@ class PointsRepository(
                 }
             }
     }
+
+    fun getStatic() = api.getSatic().subscribe(
+            {
+                System.out.print("1")
+            },
+            {
+                System.out.print("2")
+            }
+    )
 }
