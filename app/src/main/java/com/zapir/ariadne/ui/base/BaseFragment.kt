@@ -2,13 +2,13 @@ package com.zapir.ariadne.ui.base
 
 import android.content.Context
 import android.os.Bundle
+import android.support.v4.app.Fragment
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import com.arellomobile.mvp.MvpAppCompatFragment
 import org.slf4j.LoggerFactory
 
-abstract class BaseFragment : MvpAppCompatFragment() {
+abstract class BaseFragment : Fragment() {
     companion object {
         private val PROGRESS_TAG = "bf_progress"
     }

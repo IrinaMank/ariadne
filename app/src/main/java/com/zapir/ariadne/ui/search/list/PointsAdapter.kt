@@ -1,4 +1,4 @@
-package com.zapir.ariadne.ui.list
+package com.zapir.ariadne.ui.search.list
 
 import android.util.Log
 import android.view.View
@@ -25,7 +25,7 @@ class PointsAdapter(private val clickListener: (Waypoint) -> Unit) :
     override fun getItemCount() = itemPoints.size
 
     override fun onBindViewHolder(holder: ViewHolder, position: Int) {
-        val alert = (itemPoints[position]).waypoint
+        val alert = (itemPoints[position]).point
         holder.bind(alert)
     }
 
@@ -49,7 +49,7 @@ class PointsAdapter(private val clickListener: (Waypoint) -> Unit) :
                 } else {
                     itemPoints.clear()
                     itemPoints = finallyItemPoints.filter {
-                        val point = (it).waypoint
+                        val point = (it).point
                         point.name
                                 ?.toLowerCase()
                                 ?.contains(charString.toLowerCase()) ?: false
@@ -58,7 +58,7 @@ class PointsAdapter(private val clickListener: (Waypoint) -> Unit) :
                 val results = FilterResults()
                 results.values = itemPoints
                 return results
-            }
+            }//ToDo: make adapter smarter
 
             override fun publishResults(constraint: CharSequence?, results: FilterResults?) {
                 Log.e("NotificationActivity", " result ${constraint.toString()}")

@@ -1,4 +1,4 @@
-package com.zapir.ariadne.model
+package com.zapir.ariadne.model.remote
 
 import io.reactivex.schedulers.Schedulers
 import okhttp3.OkHttpClient

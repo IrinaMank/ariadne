@@ -1,46 +1,32 @@
 package com.zapir.ariadne.ui.main
 
 import android.os.Bundle
-import com.arellomobile.mvp.presenter.InjectPresenter
-import com.arellomobile.mvp.presenter.ProvidePresenter
 import com.zapir.ariadne.R
-import com.zapir.ariadne.model.entity.Waypoint
-import com.zapir.ariadne.model.points.PointsRepository
-import com.zapir.ariadne.presenter.main.MainPresenter
-import com.zapir.ariadne.presenter.main.MainView
-import com.zapir.ariadne.presenter.search.SearchPresenter
 import com.zapir.ariadne.ui.base.BaseFragment
+import com.zapir.ariadne.model.entity.Waypoint
+import com.zapir.ariadne.ui.findway.FindWayFragment
 import com.zapir.ariadne.ui.search.SearchFragment
-import kotlinx.android.synthetic.main.activity_main.*
 import kotlinx.android.synthetic.main.fragment_main.*
 
-class MainFragment: BaseFragment(), MainView {
+class MainFragment: BaseFragment() {
     override val layoutRes: Int
         get() = R.layout.fragment_main
 
-    @InjectPresenter
-    lateinit var presenter: MainPresenter
-
-    @ProvidePresenter
-    fun providePresenter(): MainPresenter {
-        return MainPresenter()
-    }
-
     override fun onActivityCreated(savedInstanceState: Bundle?) {
         super.onActivityCreated(savedInstanceState)
-        var lwp = PointsRepository().getBuilding()
         main_fragment_btn.setOnClickListener {
             activity!!.supportFragmentManager
                     .beginTransaction()
                     .replace(R.id.container, MainFragment())
-                    .commitNow()
-        }
+                    .commit()
+        }//ToDo: remove !!
 
         search_fragment_btn.setOnClickListener {
             activity!!.supportFragmentManager
                     .beginTransaction()
-                    .replace(R.id.container, SearchFragment())
-                    .commitNow()
+                    .replace(R.id.container, FindWayFragment())
+                    .addToBackStack(null)
+                    .commit()
         }
     }
 

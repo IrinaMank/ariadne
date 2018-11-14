@@ -1,4 +1,4 @@
-package com.zapir.ariadne.model
+package com.zapir.ariadne.model.remote
 
 import com.zapir.ariadne.model.entity.Building
 import com.zapir.ariadne.model.entity.Waypoint
