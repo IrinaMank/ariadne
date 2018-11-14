@@ -1,5 +1,7 @@
 package com.zapir.ariadne.ui.main
 
+import android.graphics.Bitmap
+import android.graphics.BitmapFactory
 import android.os.Bundle
 import com.zapir.ariadne.R
 import com.zapir.ariadne.ui.base.BaseFragment
@@ -7,6 +9,7 @@ import com.zapir.ariadne.model.entity.Waypoint
 import com.zapir.ariadne.ui.findway.FindWayFragment
 import com.zapir.ariadne.ui.search.SearchFragment
 import kotlinx.android.synthetic.main.fragment_main.*
+import java.io.IOException
 
 class MainFragment: BaseFragment() {
     override val layoutRes: Int
@@ -14,11 +17,23 @@ class MainFragment: BaseFragment() {
 
     override fun onActivityCreated(savedInstanceState: Bundle?) {
         super.onActivityCreated(savedInstanceState)
+
+        var bitmap: Bitmap? = null
+        try {
+            bitmap = BitmapFactory.decodeStream(activity?.assets?.open("map.png"))
+        } catch (e: IOException) {
+            e.printStackTrace()
+        }
+
+
+        bitmap?.let {
+            mapview?.loadMap(bitmap)
+        }
+
+
         main_fragment_btn.setOnClickListener {
-            activity!!.supportFragmentManager
-                    .beginTransaction()
-                    .replace(R.id.container, MainFragment())
-                    .commit()
+            mapview.setCurrentZoom(mapview.getCurrentZoom() / 2)
+            mapview.refresh()
         }//ToDo: remove !!
 
         search_fragment_btn.setOnClickListener {
