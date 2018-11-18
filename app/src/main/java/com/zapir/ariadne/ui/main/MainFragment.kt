@@ -3,11 +3,11 @@ package com.zapir.ariadne.ui.main
 import android.graphics.Bitmap
 import android.graphics.BitmapFactory
 import android.os.Bundle
+import com.onlylemi.mapview.library.layer.PointsLayer
 import com.zapir.ariadne.R
 import com.zapir.ariadne.ui.base.BaseFragment
-import com.zapir.ariadne.model.entity.Waypoint
+import com.zapir.ariadne.model.entity.common.Point
 import com.zapir.ariadne.ui.findway.FindWayFragment
-import com.zapir.ariadne.ui.search.SearchFragment
 import kotlinx.android.synthetic.main.fragment_main.*
 import java.io.IOException
 
@@ -30,10 +30,12 @@ class MainFragment: BaseFragment() {
             mapview?.loadMap(bitmap)
         }
 
+        val points = PointsLayer(mapview, listOf(Point(10f, 10f), Point(150f, 50f)))
+        mapview.addLayer(points)
 
         main_fragment_btn.setOnClickListener {
             mapview.setCurrentZoom(mapview.getCurrentZoom() / 2)
-            mapview.refresh()
+            mapview.setBackground()
         }//ToDo: remove !!
 
         search_fragment_btn.setOnClickListener {

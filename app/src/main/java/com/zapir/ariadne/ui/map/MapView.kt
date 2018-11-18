@@ -4,7 +4,6 @@ import android.content.Context
 import android.graphics.*
 import android.util.AttributeSet
 import android.graphics.Bitmap
-import android.media.Image
 import android.view.*
 import java.util.ArrayList
 
@@ -12,16 +11,12 @@ class MapView(context: Context, atributeSet: AttributeSet) : SurfaceView(context
         SurfaceHolder
 .Callback {
 
-    private val TAG = "MapView"
-
     private var holders: SurfaceHolder? = null
-    //private var mapViewListener: MapViewListener? = null
     private var isMapLoadFinish = false
     private var layers: MutableList<MapBaseLayer> = mutableListOf()// all layers
     private var mapLayer: MapLayer? = null
 
     private var canvas: Canvas? = null
-
 
     private var minZoom = 0.5f
     private var maxZoom = 3.0f
@@ -45,6 +40,21 @@ class MapView(context: Context, atributeSet: AttributeSet) : SurfaceView(context
     private var oldDegree = 0f
     private var isScaleAndRotateTogether = false
 
+    private var scaleFactor = 1f
+    private val scaleListener = object : ScaleGestureDetector.SimpleOnScaleGestureListener() {
+
+        override fun onScale(detector: ScaleGestureDetector): Boolean {
+            scaleFactor *= detector.scaleFactor
+
+            scaleFactor = Math.max(minZoom, Math.min(scaleFactor, maxZoom))
+
+            invalidate()
+            return true
+        }
+    }
+
+    private val mScaleDetector = ScaleGestureDetector(context, scaleListener)
+
     override fun surfaceChanged(p0: SurfaceHolder?, p1: Int, p2: Int, p3: Int) {
 
     }
@@ -54,7 +64,7 @@ class MapView(context: Context, atributeSet: AttributeSet) : SurfaceView(context
 
     override fun surfaceCreated(p0: SurfaceHolder?) {
         this.holders = holder
-        refresh()
+        setBackground()
     }
 
     init {
@@ -95,20 +105,12 @@ class MapView(context: Context, atributeSet: AttributeSet) : SurfaceView(context
                 if (mapLayer == null) {
                     mapLayer = MapLayer(this@MapView)
                     // add map image layer
-                    layers.add(mapLayer!!)
+                    //layers.add(mapLayer!!)
                 }
                 image = picture
                 mapLayer?.setImage(picture)
-//                if (mapViewListener != null) {
-//                    // load map success, and callback
-//                    mapViewListener.onMapLoadSuccess()
-//                }
                 isMapLoadFinish = true
-                refresh()
-            } else {
-//                if (mapViewListener != null) {
-//                    mapViewListener.onMapLoadFail()
-//                }
+                invalidate()
             }
         }).start()
     }
@@ -126,18 +128,11 @@ class MapView(context: Context, atributeSet: AttributeSet) : SurfaceView(context
         return picture
     }
 
-    fun refresh() {
+    fun setBackground() {
         if (holder != null) {
             canvas = holder.lockCanvas()
             if (canvas != null) {
                 canvas!!.drawColor(-1)
-                if (isMapLoadFinish) {
-                    for (layer in layers) {
-//                        if (layer.isVisible) {
-//                            layer.draw(canvas!!, currentMatrix, currentZoom, currentRotateDegrees)
-//                        }
-                    }
-                }
                 holder.unlockCanvasAndPost(canvas)
             }
         }
@@ -159,13 +154,13 @@ class MapView(context: Context, atributeSet: AttributeSet) : SurfaceView(context
         super.onDraw(canvas)
 
         canvas.save()
-        canvas.scale(mScaleFactor, mScaleFactor, mid.x, mid.y)
+        canvas.scale(scaleFactor, scaleFactor, mid.x, mid.y)
         if (image != null) {
             canvas.drawPicture(image)
         }
-//        layers.forEach {
-//            it.draw(canvas, currentMatrix, mScaleFactor, currentRotateDegrees)
-//        }
+        layers.forEach {
+            it.draw(canvas, currentMatrix, scaleFactor, currentRotateDegrees)
+        }
         canvas.restore()
     }
 
@@ -182,13 +177,7 @@ class MapView(context: Context, atributeSet: AttributeSet) : SurfaceView(context
         return value
     }
 
-//    fun loadPoints(points: MutableList<Point>) {
-//        val layer = PointsLayer(context)
-//        layer.setPoints(points)
-//        addLayer(layer)
-//    }
-
-    private fun addLayer(layer: MapBaseLayer) {
+    fun addLayer(layer: MapBaseLayer) {
         layers.add(layer)
         invalidate()
     }
@@ -204,6 +193,11 @@ class MapView(context: Context, atributeSet: AttributeSet) : SurfaceView(context
 
     override fun onTouchEvent(event: MotionEvent): Boolean {
         when(event.action and MotionEvent.ACTION_MASK) {
+            MotionEvent.ACTION_DOWN -> {
+                saveMatrix.set(currentMatrix)
+                startTouch.set(event.getX(), event.getY())
+                currentTouchState = TOUCH_STATE_SCROLL
+            }
             MotionEvent.ACTION_POINTER_DOWN ->
                 if (event.pointerCount == 2) {
                     saveMatrix.set(currentMatrix)
@@ -213,6 +207,13 @@ class MapView(context: Context, atributeSet: AttributeSet) : SurfaceView(context
                     mid = midPoint(event)
                     oldDist = distance(event, mid)
                 }
+            MotionEvent.ACTION_MOVE -> {
+                if (currentTouchState == TOUCH_STATE_SCROLL) {
+                    saveMatrix.set(currentMatrix)
+                    currentMatrix.postTranslate(event.x - startTouch.x, event.y - startTouch.y)
+                    refreshMap()
+                }
+            }
         }
                 if (!isMapLoadFinish) {
                     return false
@@ -221,26 +222,9 @@ class MapView(context: Context, atributeSet: AttributeSet) : SurfaceView(context
                 return true
         }
 
-    private var mScaleFactor = 1f
-
-    private val scaleListener = object : ScaleGestureDetector.SimpleOnScaleGestureListener() {
-
-        override fun onScale(detector: ScaleGestureDetector): Boolean {
-            mScaleFactor *= detector.scaleFactor
-
-            // Don't let the object get too small or too large.
-            mScaleFactor = Math.max(0.1f, Math.min(mScaleFactor, 3.0f))
-
-            invalidate()
-            //currentMatrix.postScale(currentZoom, currentZoom, mid.x, mid.y)
-           // refresh()
-            return true
-        }
+    private fun refreshMap() {
+        canvas?.drawPicture(image)
     }
-
-    private val mScaleDetector = ScaleGestureDetector(context, scaleListener)
-
-
 
     private fun midPoint(event: MotionEvent): PointF {
         return getMidPointBetweenTwoPoints(event.getX(0), event.getY(0), event.getX(1), event.getY(1))
