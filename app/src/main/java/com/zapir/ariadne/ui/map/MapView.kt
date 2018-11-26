@@ -4,6 +4,8 @@ import android.content.Context
 import android.graphics.*
 import android.util.AttributeSet
 import android.graphics.Bitmap
+import android.media.Image
+import android.support.v4.view.MotionEventCompat
 import android.view.*
 import java.util.ArrayList
 
@@ -35,6 +37,7 @@ class MapView(context: Context, atributeSet: AttributeSet) : SurfaceView(context
     private val TOUCH_STATE_SCROLL = 1 // scroll(one point)
     private val TOUCH_STATE_SCALE = 2 // scale(two points)
     private var currentTouchState = TOUCH_STATE_SCALE // default touch state
+    private var  mActivePointerId = 0
 
     private var oldDist = 0f
     private var oldDegree = 0f
@@ -194,26 +197,43 @@ class MapView(context: Context, atributeSet: AttributeSet) : SurfaceView(context
     override fun onTouchEvent(event: MotionEvent): Boolean {
         when(event.action and MotionEvent.ACTION_MASK) {
             MotionEvent.ACTION_DOWN -> {
-                saveMatrix.set(currentMatrix)
-                startTouch.set(event.getX(), event.getY())
-                currentTouchState = TOUCH_STATE_SCROLL
+                MotionEventCompat.getActionIndex(event).also { pointerIndex ->
+                    // Remember where we started (for dragging)
+                    startTouch.set(MotionEventCompat.getX(event, pointerIndex), MotionEventCompat.getY(event, pointerIndex))
+
+                }
+
+                // Save the ID of this pointer (for dragging)
+                mActivePointerId = MotionEventCompat.getPointerId(event, 0)
+            }
+            MotionEvent.ACTION_MOVE -> {
+                // Find the index of the active pointer and fetch its position
+                val (x: Float, y: Float) =
+                        MotionEventCompat.findPointerIndex(event, mActivePointerId).let { pointerIndex ->
+                            // Calculate the distance moved
+                            MotionEventCompat.getX(event, pointerIndex) to
+                                    MotionEventCompat.getY(event, pointerIndex)
+                            //ToDo: IllegalArgumentException: pointerIndex out of range
+                        }
+
+                mid.x -= x - startTouch.x
+                mid.y -= y - startTouch.y
+
+                invalidate()
+
+                // Remember this touch position for the next move event
+                startTouch.x = x
+                startTouch.y = y
             }
             MotionEvent.ACTION_POINTER_DOWN ->
                 if (event.pointerCount == 2) {
-                    saveMatrix.set(currentMatrix)
+                    //saveMatrix.set(currentMatrix)
                     saveZoom = currentZoom
                     saveRotateDegrees = currentRotateDegrees
-                    startTouch.set(event.getX(0), event.getY(0))
+                    //startTouch.set(event.getX(0), event.getY(0))
                     mid = midPoint(event)
-                    oldDist = distance(event, mid)
+                    //oldDist = distance(event, mid)
                 }
-            MotionEvent.ACTION_MOVE -> {
-                if (currentTouchState == TOUCH_STATE_SCROLL) {
-                    saveMatrix.set(currentMatrix)
-                    currentMatrix.postTranslate(event.x - startTouch.x, event.y - startTouch.y)
-                    refreshMap()
-                }
-            }
         }
                 if (!isMapLoadFinish) {
                     return false
