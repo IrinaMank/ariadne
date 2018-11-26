@@ -226,8 +226,8 @@ class MapView(context: Context, atributeSet: AttributeSet) : SurfaceView(context
                             //ToDo: IllegalArgumentException: pointerIndex out of range
                         }
 
-                mid.x += x - startTouch.x
-                mid.y += y - startTouch.y
+                mid.x -= x - startTouch.x
+                mid.y -= y - startTouch.y
 
                 invalidate()
 
