@@ -72,12 +72,13 @@ class PointsAdapter(private val clickListener: (Waypoint) -> Unit) :
         private lateinit var waypoint: Waypoint
 
         init {
-            view.setOnClickListener { clickListener.invoke(waypoint) }
+            view.item_point_tv.setOnClickListener { clickListener.invoke(waypoint) }
         }
 
         fun bind(waypoint: Waypoint) {
             this.waypoint = waypoint
-            view.item_point_tv.text = waypoint.name
+            view.item_point_tv.setMarkdownText("{fa_map_marker} " + waypoint.name)
+            //view.item_point_tv.setFontAwesomeIcon("fa_map_marker")
 
         }
     }
