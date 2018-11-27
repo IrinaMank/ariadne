@@ -107,19 +107,16 @@ class MapView(context: Context, atributeSet: AttributeSet) : ImageView(context, 
         return picture
     }
 
-    fun translate(x: Float, y: Float) {
-        currentMatrix.postTranslate(x, y)
-    }
-
     override fun onDraw(canvas: Canvas) {
         super.onDraw(canvas)
-
-        pivotX = image?.width?.div(2f) ?: 0f
-        pivotY = image?.height?.div(2f) ?: 0f
-
         canvas.save()
+        pivotX = image?.width?.div(2f) ?: 0f
+        pivotY = image?.height?.div(2f)?: 0f
+        pivotY += (this as View).height.div(2f)
+
+
         canvas.translate(mPosX, mPosY)
-        canvas.scale(scaleFactor, scaleFactor)
+        canvas.scale(scaleFactor, scaleFactor, pivotX, pivotY)
         if (image != null) {
             canvas.drawPicture(image)
         }
@@ -206,8 +203,8 @@ class MapView(context: Context, atributeSet: AttributeSet) : ImageView(context, 
 
     private fun getOffset() {
         image?.let {
-            offsetX = ((this.parent as View).width.toFloat() - it.width * scaleFactor)
-            offsetY = ((this.parent as View).height.toFloat()) - it.height * scaleFactor
+            offsetX = ((this as View).width.toFloat() - it.width * scaleFactor)
+            offsetY = ((this as View).height.toFloat()) - it.height * scaleFactor
         }
     }
 

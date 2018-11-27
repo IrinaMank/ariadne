@@ -32,6 +32,14 @@ class MainFragment: BaseFragment() {
 
         val points = PointsLayer(mapview, listOf(Point(10f, 10f), Point(150f, 50f)))
         mapview.addLayer(points)
+
+        search_btn.setOnClickListener {
+            activity!!.supportFragmentManager
+                    .beginTransaction()
+                    .replace(R.id.container, FindWayFragment())
+                    .addToBackStack(null)
+                    .commit()
+        }
 //
 //        search_fragment_btn.setOnClickListener {
 //            activity!!.supportFragmentManager
