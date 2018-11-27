@@ -3,45 +3,38 @@ package com.zapir.ariadne.ui.map
 import android.content.Context
 import android.graphics.*
 import android.util.AttributeSet
-import android.graphics.Bitmap
-import android.media.Image
-import android.support.v4.view.MotionEventCompat
-import android.view.*
-import java.util.ArrayList
+import android.view.MotionEvent
+import android.view.MotionEvent.INVALID_POINTER_ID
+import android.view.ScaleGestureDetector
+import android.view.View
+import android.view.WindowManager
+import android.widget.ImageView
+import java.util.*
+import kotlin.math.abs
 
-class MapView(context: Context, atributeSet: AttributeSet) : SurfaceView(context, atributeSet),
-        SurfaceHolder
-.Callback {
+class MapView(context: Context, atributeSet: AttributeSet) : ImageView(context, atributeSet) {
 
-    private var holders: SurfaceHolder? = null
     private var isMapLoadFinish = false
     private var layers: MutableList<MapBaseLayer> = mutableListOf()// all layers
-    private var mapLayer: MapLayer? = null
 
-    private var canvas: Canvas? = null
+    var offsetX = 0f
+    var offsetY = 0f
 
-    private var minZoom = 0.5f
-    private var maxZoom = 3.0f
+    private var minZoom = 0.15f
+    private var maxZoom = 0.8f
 
-    private val startTouch = PointF()
     private var mid = PointF()
-
-    private val saveMatrix = Matrix()
+    private var mLastTouchX: Float = 0.toFloat()
+    private var mLastTouchY: Float = 0.toFloat()
     private val currentMatrix = Matrix()
-    private var currentZoom = 1.0f
-    private var saveZoom = 0f
     private var currentRotateDegrees = 0.0f
-    private var saveRotateDegrees = 0.0f
 
-    private val TOUCH_STATE_NO = 0 // no touch
-    private val TOUCH_STATE_SCROLL = 1 // scroll(one point)
-    private val TOUCH_STATE_SCALE = 2 // scale(two points)
-    private var currentTouchState = TOUCH_STATE_SCALE // default touch state
-    private var  mActivePointerId = 0
+    private var mActivePointerId = INVALID_POINTER_ID
 
-    private var oldDist = 0f
-    private var oldDegree = 0f
-    private var isScaleAndRotateTogether = false
+    private var mPosX: Float = 0.toFloat()
+    private var mPosY: Float = 0.toFloat()
+
+    private var image: Picture? = null
 
     private var scaleFactor = 1f
     private val scaleListener = object : ScaleGestureDetector.SimpleOnScaleGestureListener() {
@@ -51,6 +44,8 @@ class MapView(context: Context, atributeSet: AttributeSet) : SurfaceView(context
 
             scaleFactor = Math.max(minZoom, Math.min(scaleFactor, maxZoom))
 
+            mid.x *= scaleFactor
+            mid.y *= scaleFactor
             invalidate()
             return true
         }
@@ -58,21 +53,7 @@ class MapView(context: Context, atributeSet: AttributeSet) : SurfaceView(context
 
     private val mScaleDetector = ScaleGestureDetector(context, scaleListener)
 
-    override fun surfaceChanged(p0: SurfaceHolder?, p1: Int, p2: Int, p3: Int) {
-
-    }
-
-    override fun surfaceDestroyed(p0: SurfaceHolder?) {
-    }
-
-    override fun surfaceCreated(p0: SurfaceHolder?) {
-        this.holders = holder
-        setBackground()
-    }
-
     init {
-        holder.addCallback(this)
-
         layers = object : ArrayList<MapBaseLayer>() {
             override fun add(layer: MapBaseLayer): Boolean {
                 if (layers.size != 0) {
@@ -99,27 +80,22 @@ class MapView(context: Context, atributeSet: AttributeSet) : SurfaceView(context
         loadMap(getPictureFromBitmap(bitmap))
     }
 
-    var image: Picture? = null
-    fun loadMap(picture: Picture?) {
+
+    private fun loadMap(picture: Picture?) {
         isMapLoadFinish = false
 
         Thread(Runnable {
             if (picture != null) {
-                if (mapLayer == null) {
-                    mapLayer = MapLayer(this@MapView)
-                    // add map image layer
-                    //layers.add(mapLayer!!)
-                }
                 image = picture
-                mapLayer?.setImage(picture)
                 isMapLoadFinish = true
+                initZoom()
                 invalidate()
             }
         }).start()
     }
 
 
-    fun getPictureFromBitmap(bitmap: Bitmap): Picture {
+    private fun getPictureFromBitmap(bitmap: Bitmap): Picture {
         val picture = Picture()
         val canvas = picture.beginRecording(bitmap.width,
                 bitmap.height)
@@ -131,24 +107,6 @@ class MapView(context: Context, atributeSet: AttributeSet) : SurfaceView(context
         return picture
     }
 
-    fun setBackground() {
-        if (holder != null) {
-            canvas = holder.lockCanvas()
-            if (canvas != null) {
-                canvas!!.drawColor(-1)
-                holder.unlockCanvasAndPost(canvas)
-            }
-        }
-    }
-
-    fun getCurrentZoom(): Float {
-        return currentZoom
-    }
-
-    fun setCurrentZoom(zoom: Float) {
-        setCurrentZoom(zoom, (width / 2).toFloat(), (height / 2).toFloat())
-    }
-
     fun translate(x: Float, y: Float) {
         currentMatrix.postTranslate(x, y)
     }
@@ -156,8 +114,12 @@ class MapView(context: Context, atributeSet: AttributeSet) : SurfaceView(context
     override fun onDraw(canvas: Canvas) {
         super.onDraw(canvas)
 
+        pivotX = image?.width?.div(2f) ?: 0f
+        pivotY = image?.height?.div(2f) ?: 0f
+
         canvas.save()
-        canvas.scale(scaleFactor, scaleFactor, mid.x, mid.y)
+        canvas.translate(mPosX, mPosY)
+        canvas.scale(scaleFactor, scaleFactor)
         if (image != null) {
             canvas.drawPicture(image)
         }
@@ -167,90 +129,97 @@ class MapView(context: Context, atributeSet: AttributeSet) : SurfaceView(context
         canvas.restore()
     }
 
-    fun setCurrentZoom(zoom: Float, x: Float, y: Float) {
-        currentMatrix.postScale(zoom / this.currentZoom, zoom / this.currentZoom, x, y)
-        this.currentZoom = zoom
-    }
-
-    fun convertMapXYToScreenXY(x: Float, y: Float): FloatArray {
-        val invertMatrix = Matrix()
-        val value = floatArrayOf(x, y)
-        currentMatrix.invert(invertMatrix)
-        invertMatrix.mapPoints(value)
-        return value
-    }
-
     fun addLayer(layer: MapBaseLayer) {
         layers.add(layer)
         invalidate()
     }
 
-    private fun distance(event: MotionEvent, mid: PointF): Float {
-        return getDistanceBetweenTwoPoints(event.getX(0), event.getY(0), mid.x, mid.y)
-    }
+    override fun onTouchEvent(ev: MotionEvent): Boolean {
+        mScaleDetector.onTouchEvent(ev)
 
-    fun getDistanceBetweenTwoPoints(x1: Float, y1: Float,
-                                    x2: Float, y2: Float): Float {
-        return Math.sqrt(Math.pow((x2 - x1).toDouble(), 2.0) + Math.pow((y2 - y1).toDouble(), 2.0)).toFloat()
-    }
-
-    override fun onTouchEvent(event: MotionEvent): Boolean {
-        when(event.action and MotionEvent.ACTION_MASK) {
+        val action = ev.getAction()
+        when (action and MotionEvent.ACTION_MASK) {
             MotionEvent.ACTION_DOWN -> {
-                MotionEventCompat.getActionIndex(event).also { pointerIndex ->
-                    // Remember where we started (for dragging)
-                    startTouch.set(MotionEventCompat.getX(event, pointerIndex), MotionEventCompat.getY(event, pointerIndex))
+                val x = ev.x
+                val y = ev.y
 
-                }
-
-                // Save the ID of this pointer (for dragging)
-                mActivePointerId = MotionEventCompat.getPointerId(event, 0)
+                mLastTouchX = x
+                mLastTouchY = y
+                mActivePointerId = ev.getPointerId(0)
             }
+
             MotionEvent.ACTION_MOVE -> {
-                // Find the index of the active pointer and fetch its position
-                val (x: Float, y: Float) =
-                        MotionEventCompat.findPointerIndex(event, mActivePointerId).let { pointerIndex ->
-                            // Calculate the distance moved
-                            MotionEventCompat.getX(event, pointerIndex) to
-                                    MotionEventCompat.getY(event, pointerIndex)
-                            //ToDo: IllegalArgumentException: pointerIndex out of range
-                        }
+                val pointerIndex = ev.findPointerIndex(mActivePointerId)
+                val x = ev.getX(pointerIndex)
+                val y = ev.getY(pointerIndex)
 
-                mid.x -= x - startTouch.x
-                mid.y -= y - startTouch.y
+                if (!mScaleDetector.isInProgress) {
+                    val dx = x - mLastTouchX
+                    val dy = y - mLastTouchY
 
-                invalidate()
+                    getOffset()
+                    mPosX += dx
+                    mPosY += dy
+                    mPosX = if (mPosX < 0) {
+                        -minOf(abs(mPosX), abs(offsetX))
 
-                // Remember this touch position for the next move event
-                startTouch.x = x
-                startTouch.y = y
+                    } else {
+                        0f
+                    }
+                    mPosY = if (mPosY >= 0) {
+                        0f
+                    } else {
+                        -minOf(abs(mPosY), abs(offsetY))
+                    }
+
+                    invalidate()
+                }
+
+                mLastTouchX = x
+                mLastTouchY = y
             }
-            MotionEvent.ACTION_POINTER_DOWN ->
-                if (event.pointerCount == 2) {
-                    //saveMatrix.set(currentMatrix)
-                    saveZoom = currentZoom
-                    saveRotateDegrees = currentRotateDegrees
-                    //startTouch.set(event.getX(0), event.getY(0))
-                    mid = midPoint(event)
-                    //oldDist = distance(event, mid)
-                }
-        }
-                if (!isMapLoadFinish) {
-                    return false
-                }
-            mScaleDetector.onTouchEvent(event)
-                return true
-        }
 
-    private fun refreshMap() {
-        canvas?.drawPicture(image)
+            MotionEvent.ACTION_UP -> {
+                mActivePointerId = INVALID_POINTER_ID
+            }
+
+            MotionEvent.ACTION_CANCEL -> {
+                mActivePointerId = INVALID_POINTER_ID
+            }
+
+            MotionEvent.ACTION_POINTER_UP -> {
+                val pointerIndex = ev.action and MotionEvent.ACTION_POINTER_INDEX_MASK shr MotionEvent.ACTION_POINTER_INDEX_SHIFT
+                val pointerId = ev.getPointerId(pointerIndex)
+                if (pointerId == mActivePointerId) {
+                    // This was our active pointer going up. Choose a new
+                    // active pointer and adjust accordingly.
+                    val newPointerIndex = if (pointerIndex == 0) 1 else 0
+                    mLastTouchX = ev.getX(newPointerIndex)
+                    mLastTouchY = ev.getY(newPointerIndex)
+                    mActivePointerId = ev.getPointerId(newPointerIndex)
+                }
+            }
+        }
+        return true
     }
 
-    private fun midPoint(event: MotionEvent): PointF {
-        return getMidPointBetweenTwoPoints(event.getX(0), event.getY(0), event.getX(1), event.getY(1))
+
+    private fun getOffset() {
+        image?.let {
+            offsetX = ((this.parent as View).width.toFloat() - it.width * scaleFactor)
+            offsetY = ((this.parent as View).height.toFloat()) - it.height * scaleFactor
+        }
     }
 
-    fun getMidPointBetweenTwoPoints(x1: Float, y1: Float, x2: Float, y2: Float): PointF {
-        return PointF((x1 + x2) / 2, (y1 + y2) / 2)
+    private fun initZoom() {
+        val wm = context.getSystemService(Context.WINDOW_SERVICE) as WindowManager
+        val display = wm.defaultDisplay
+        val screenSize = Point()
+        display.getSize(screenSize)
+        image?.let {
+
+            scaleFactor = screenSize.x.toFloat().div(it.width)
+            minZoom = scaleFactor
+        }
     }
 }

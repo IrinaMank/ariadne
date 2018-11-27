@@ -20,7 +20,7 @@ class MainFragment: BaseFragment() {
 
         var bitmap: Bitmap? = null
         try {
-            bitmap = BitmapFactory.decodeStream(activity?.assets?.open("map.png"))
+            bitmap = BitmapFactory.decodeStream(activity?.assets?.open("floor_2.png"))
         } catch (e: IOException) {
             e.printStackTrace()
         }
@@ -32,19 +32,14 @@ class MainFragment: BaseFragment() {
 
         val points = PointsLayer(mapview, listOf(Point(10f, 10f), Point(150f, 50f)))
         mapview.addLayer(points)
-
-        main_fragment_btn.setOnClickListener {
-            mapview.setCurrentZoom(mapview.getCurrentZoom() / 2)
-            mapview.setBackground()
-        }//ToDo: remove !!
-
-        search_fragment_btn.setOnClickListener {
-            activity!!.supportFragmentManager
-                    .beginTransaction()
-                    .replace(R.id.container, FindWayFragment())
-                    .addToBackStack(null)
-                    .commit()
-        }
+//
+//        search_fragment_btn.setOnClickListener {
+//            activity!!.supportFragmentManager
+//                    .beginTransaction()
+//                    .replace(R.id.container, FindWayFragment())
+//                    .addToBackStack(null)
+//                    .commit()
+//        }
     }
 
 }

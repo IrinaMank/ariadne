@@ -44,12 +44,6 @@ class MapLayer(mapView: MapView): MapBaseLayer(mapView) {
                 image
                 !!.height.toFloat())
         Log.i("lfj", java.lang.Float.toString(zoom))
-        mapView.setCurrentZoom(zoom, 0f, 0f)
-
-        val width = mapView.width - zoom * image!!.width
-        val height = mapView.height - zoom * image!!.height
-
-        mapView.translate(width / 2, height / 2)
     }
 
     fun setImage(image: Picture) {
