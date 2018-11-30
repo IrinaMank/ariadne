@@ -20,22 +20,18 @@ class SearchViewModel(
     fun getPoints() =
             interactor.getPoints()
                     .doOnSubscribe {
-                        Log.e("dlf", "BEGIN")
                         state.postValue(WaypointsState.LoadingState(true))
                     }
-                    .doFinally {
+                    .doAfterTerminate {
                         state.postValue(WaypointsState.LoadingState(false))
-                        Log.e("dlf", "TERMINATE")
                     }
                     .subscribeOn(Schedulers.io())
                     .observeOn(AndroidSchedulers.mainThread())
                     .subscribe(
                             {
                                 state.postValue(WaypointsState.SuccessState(it))
-                                //points.postValue(it)
                             },
                             {
-                                print(it.message)
                                 state.postValue(WaypointsState.FailState(it))
 
                             }
