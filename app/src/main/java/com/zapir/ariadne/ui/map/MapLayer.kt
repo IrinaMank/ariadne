@@ -46,8 +46,8 @@ class MapLayer(mapView: MapView): MapBaseLayer(mapView) {
         Log.i("lfj", java.lang.Float.toString(zoom))
     }
 
-    fun setImage(image: Picture) {
-        this.image = image
+    fun setImage(image: Bitmap) {
+        this.image = getPictureFromBitmap(image)
 
         if (mapView.width == 0) {
             val vto = mapView.viewTreeObserver
@@ -61,6 +61,18 @@ class MapLayer(mapView: MapView): MapBaseLayer(mapView) {
         } else {
             initMapLayer()
         }
+    }
+
+    private fun getPictureFromBitmap(bitmap: Bitmap): Picture {
+        val picture = Picture()
+        val canvas = picture.beginRecording(bitmap.width,
+                bitmap.height)
+        canvas.drawBitmap(
+                bitmap, null,
+                RectF(0f, 0f, bitmap.width.toFloat(), bitmap
+                        .height.toFloat()), null)
+        picture.endRecording()
+        return picture
     }
 
 }

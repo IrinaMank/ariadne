@@ -8,6 +8,7 @@ import com.zapir.ariadne.R
 import com.zapir.ariadne.ui.base.BaseFragment
 import com.zapir.ariadne.model.entity.common.Point
 import com.zapir.ariadne.ui.findway.FindWayFragment
+import com.zapir.ariadne.ui.map.MapLayer
 import kotlinx.android.synthetic.main.fragment_main.*
 import java.io.IOException
 
@@ -27,11 +28,13 @@ class MainFragment: BaseFragment() {
 
 
         bitmap?.let {
-            mapview?.loadMap(bitmap)
+            mapview?.loadMap(it)
         }
 
         val points = PointsLayer(mapview, listOf(Point(10f, 10f), Point(150f, 50f)))
         mapview.addLayer(points)
+        val floor3 = MapLayer(mapview)
+        floor3.setImage(bitmap!!)
 
         search_btn.setOnClickListener {
             activity!!.supportFragmentManager
@@ -39,6 +42,21 @@ class MainFragment: BaseFragment() {
                     .replace(R.id.container, FindWayFragment())
                     .addToBackStack(null)
                     .commit()
+        }
+
+        floor_3.setOnClickListener {
+            var bitmap: Bitmap? = null
+            try {
+                bitmap = BitmapFactory.decodeStream(activity?.assets?.open("map.png"))
+            } catch (e: IOException) {
+                e.printStackTrace()
+            }
+
+
+            bitmap?.let {
+                mapview?.loadMap(it)
+            }
+
         }
 //
 //        search_fragment_btn.setOnClickListener {

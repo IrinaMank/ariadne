@@ -112,11 +112,11 @@ class MapView(context: Context, atributeSet: AttributeSet) : ImageView(context, 
         canvas.save()
         pivotX = image?.width?.div(2f) ?: 0f
         pivotY = image?.height?.div(2f)?: 0f
-        pivotY += (this as View).height.div(2f)
+        //pivotY += (this as View).height.div(2f)
 
 
         canvas.translate(mPosX, mPosY)
-        canvas.scale(scaleFactor, scaleFactor, pivotX, pivotY)
+        canvas.scale(scaleFactor, scaleFactor)
         if (image != null) {
             canvas.drawPicture(image)
         }
