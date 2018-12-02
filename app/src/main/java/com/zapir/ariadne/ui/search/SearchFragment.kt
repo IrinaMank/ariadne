@@ -11,6 +11,7 @@ import android.text.TextWatcher
 import android.arch.lifecycle.Observer
 import android.util.Log
 import android.view.View
+import com.zapir.ariadne.model.entity.common.PointType
 import com.zapir.ariadne.presenter.search.SearchViewModel
 import com.zapir.ariadne.presenter.search.WaypointsState
 import com.zapir.ariadne.ui.route.RouteFragment
@@ -45,7 +46,9 @@ class SearchFragment: BaseFragment() {
                 is WaypointsState.SuccessState ->
                 {
                     showProgress(false)
-                    adapter.setData(state.list)
+                    adapter.setData(state.list.filter {
+                        it.type != PointType.HALL.value && it.type != PointType.LADDER.value
+                    })
                 }
                 is WaypointsState.FailState -> {
                     showProgress(false)
