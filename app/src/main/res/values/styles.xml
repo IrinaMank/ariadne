@@ -7,5 +7,10 @@
         <item name="colorPrimaryDark">@color/colorPrimaryDark</item>
         <item name="colorAccent">@color/colorAccent</item>
     </style>
-
+<style name="floor_radio_btn">
+    <item name="android:background">@drawable/floor_btn_background</item>
+    <item name="android:gravity">center</item>
+    <item name="android:button">@android:color/transparent</item>
+    <item name="android:layout_weight">1</item>
+</style>
 </resources>
