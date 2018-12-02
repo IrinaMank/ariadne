@@ -12,27 +12,25 @@ import android.widget.ImageView
 import java.util.*
 import kotlin.math.abs
 
-class MapView(context: Context, atributeSet: AttributeSet) : ImageView(context, atributeSet) {
+class MapView(context: Context, attributeSet: AttributeSet) : ImageView(context, attributeSet) {
 
-    private var isMapLoadFinish = false
-    private var layers: MutableList<MapBaseLayer> = mutableListOf()// all layers
+    private var layers: MutableList<MapBaseLayer> = mutableListOf()
 
-    var offsetX = 0f
-    var offsetY = 0f
+    private var offsetX = 0f
+    private var offsetY = 0f
 
     private var minZoom = 0.15f
     private var maxZoom = 0.8f
 
-    private var mid = PointF()
-    private var mLastTouchX: Float = 0.toFloat()
-    private var mLastTouchY: Float = 0.toFloat()
+    private var mLastTouchX: Float = 0f
+    private var mLastTouchY: Float = 0f
     private val currentMatrix = Matrix()
     private var currentRotateDegrees = 0.0f
 
     private var mActivePointerId = INVALID_POINTER_ID
 
-    private var mPosX: Float = 0.toFloat()
-    private var mPosY: Float = 0.toFloat()
+    private var mPosX: Float = 0f
+    private var mPosY: Float = 0f
 
     private var image: Picture? = null
 
@@ -44,8 +42,6 @@ class MapView(context: Context, atributeSet: AttributeSet) : ImageView(context, 
 
             scaleFactor = Math.max(minZoom, Math.min(scaleFactor, maxZoom))
 
-            mid.x *= scaleFactor
-            mid.y *= scaleFactor
             invalidate()
             return true
         }
@@ -80,20 +76,15 @@ class MapView(context: Context, atributeSet: AttributeSet) : ImageView(context, 
         loadMap(getPictureFromBitmap(bitmap))
     }
 
-
     private fun loadMap(picture: Picture?) {
-        isMapLoadFinish = false
-
-        Thread(Runnable {
+            Thread(Runnable {
             if (picture != null) {
                 image = picture
-                isMapLoadFinish = true
                 initZoom()
                 invalidate()
             }
         }).start()
     }
-
 
     private fun getPictureFromBitmap(bitmap: Bitmap): Picture {
         val picture = Picture()
@@ -112,8 +103,6 @@ class MapView(context: Context, atributeSet: AttributeSet) : ImageView(context, 
         canvas.save()
         pivotX = image?.width?.div(2f) ?: 0f
         pivotY = image?.height?.div(2f)?: 0f
-        //pivotY += (this as View).height.div(2f)
-
 
         canvas.translate(mPosX, mPosY)
         canvas.scale(scaleFactor, scaleFactor)
@@ -154,19 +143,19 @@ class MapView(context: Context, atributeSet: AttributeSet) : ImageView(context, 
                     val dx = x - mLastTouchX
                     val dy = y - mLastTouchY
 
-                    getOffset()
                     mPosX += dx
                     mPosY += dy
-                    mPosX = if (mPosX < 0) {
-                        -minOf(abs(mPosX), abs(offsetX))
 
+                    getOffset()
+                    mPosX = if (mPosX < 0 && offsetX < 0) {
+                        maxOf(mPosX, offsetX)
                     } else {
                         0f
                     }
-                    mPosY = if (mPosY >= 0) {
-                        0f
+                    mPosY = if (mPosY < 0  && offsetY < 0) {
+                       maxOf(mPosY, offsetY)
                     } else {
-                        -minOf(abs(mPosY), abs(offsetY))
+                        0f
                     }
 
                     invalidate()
@@ -188,8 +177,6 @@ class MapView(context: Context, atributeSet: AttributeSet) : ImageView(context, 
                 val pointerIndex = ev.action and MotionEvent.ACTION_POINTER_INDEX_MASK shr MotionEvent.ACTION_POINTER_INDEX_SHIFT
                 val pointerId = ev.getPointerId(pointerIndex)
                 if (pointerId == mActivePointerId) {
-                    // This was our active pointer going up. Choose a new
-                    // active pointer and adjust accordingly.
                     val newPointerIndex = if (pointerIndex == 0) 1 else 0
                     mLastTouchX = ev.getX(newPointerIndex)
                     mLastTouchY = ev.getY(newPointerIndex)

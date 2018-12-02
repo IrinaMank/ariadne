@@ -33,8 +33,6 @@ class MainFragment: BaseFragment() {
 
         val points = PointsLayer(mapview, listOf(Point(10f, 10f), Point(150f, 50f)))
         mapview.addLayer(points)
-        val floor3 = MapLayer(mapview)
-        floor3.setImage(bitmap!!)
 
         search_btn.setOnClickListener {
             activity!!.supportFragmentManager
@@ -43,29 +41,6 @@ class MainFragment: BaseFragment() {
                     .addToBackStack(null)
                     .commit()
         }
-
-        floor_3.setOnClickListener {
-            var bitmap: Bitmap? = null
-            try {
-                bitmap = BitmapFactory.decodeStream(activity?.assets?.open("map.png"))
-            } catch (e: IOException) {
-                e.printStackTrace()
-            }
-
-
-            bitmap?.let {
-                mapview?.loadMap(it)
-            }
-
-        }
-//
-//        search_fragment_btn.setOnClickListener {
-//            activity!!.supportFragmentManager
-//                    .beginTransaction()
-//                    .replace(R.id.container, FindWayFragment())
-//                    .addToBackStack(null)
-//                    .commit()
-//        }
     }
 
 }
