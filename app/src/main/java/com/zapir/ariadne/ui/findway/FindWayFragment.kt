@@ -24,19 +24,19 @@ class FindWayFragment: BaseFragment() {
     override fun onActivityCreated(savedInstanceState: Bundle?) {
         super.onActivityCreated(savedInstanceState)
 
-        textview.setOnClickListener { onFromTextViewClicked() }
-        textview2.setOnClickListener { onToTextViewClicked() }
-        textview.text = "Default"//ToDo: remove hardcode
+        source_tv.setOnClickListener { onFromTextViewClicked() }
+        destination_tv.setOnClickListener { onToTextViewClicked() }
+        source_tv.setMarkdownText("{fa_angle_left} " + "Начало")
         pointsViewModel.from.observe(this, Observer {
-            textview.text = it?.name
+            source_tv.setMarkdownText("{fa_angle_left} " + it?.name)
         })// создаем подписчика на изменения данных
-        textview2.text = "Default"
+        destination_tv.setMarkdownText("{fa_angle_left} " + "Конец :(")
         pointsViewModel.to.observe(this, Observer {
-            textview2.text = it?.name
+            destination_tv.setMarkdownText("{fa_angle_right} " + it?.name)
         })
 
         btn.setOnClickListener {
-            if (!textview.text.isNullOrEmpty() && !textview2.text.isNullOrEmpty()) {
+            if (!source_tv.text.isNullOrEmpty() && !destination_tv.text.isNullOrEmpty()) {
                 val intent = RouteFragment.startIntent(pointsViewModel.from.value,
                         pointsViewModel.to.value)
                 activity?.supportFragmentManager
