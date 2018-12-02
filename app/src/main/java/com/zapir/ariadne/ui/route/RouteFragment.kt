@@ -16,6 +16,7 @@ import com.zapir.ariadne.ui.map.RouteLayer
 import kotlinx.android.synthetic.main.fragment_findway.*
 import kotlinx.android.synthetic.main.fragment_main.*
 import kotlinx.android.synthetic.main.fragment_route.*
+import kotlinx.android.synthetic.main.layout_map.*
 import org.koin.android.ext.android.inject
 import java.io.IOException
 
@@ -38,14 +39,13 @@ class RouteFragment: BaseFragment() {
         }
 
         bitmap?.let {
-            mapview_result?.loadMap(it)
+            mapview?.loadMap(it)
         }
 
         viewModel.route.observe(this, Observer {
-            text.text = it.toString()
             it?.let {
-                val routeLayer = RouteLayer(mapview_result, it)
-                mapview_result.addLayer(routeLayer)
+                val routeLayer = RouteLayer(mapview, it)
+                mapview.addLayer(routeLayer)
             }
 
         })

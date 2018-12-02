@@ -10,6 +10,7 @@ import com.zapir.ariadne.model.entity.common.Point
 import com.zapir.ariadne.ui.findway.FindWayFragment
 import com.zapir.ariadne.ui.map.MapLayer
 import kotlinx.android.synthetic.main.fragment_main.*
+import kotlinx.android.synthetic.main.layout_map.*
 import java.io.IOException
 
 class MainFragment: BaseFragment() {
