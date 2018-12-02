@@ -1,29 +1,50 @@
 <?xml version="1.0" encoding="utf-8"?>
-<LinearLayout
-    xmlns:android="http://schemas.android.com/apk/res/android"
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
     android:orientation="vertical">
 
-    <TextView
-        android:id="@+id/textview"
+    <com.beardedhen.androidbootstrap.AwesomeTextView
+        android:id="@+id/source-tv"
+        app:bootstrapBrand="primary"
         android:layout_width="match_parent"
-        android:layout_height="200dp"
+        android:layout_height="60dp"
+        android:textSize="30sp"
         android:text="ПРИТВОРИМСЯ ЧТО ЭТО ТЕКСТВЬЮ ВЫБРАТЬ МЕСТО"
-        android:clickable="true"/>
+        android:clickable="true"
+        android:background="@drawable/back"
+        android:layout_marginStart="5dp"
+        android:layout_marginTop="5dp"
+        android:layout_marginEnd="5dp"
+        android:paddingStart="9dp"
+        android:textAlignment="textStart"/>
 
-    <TextView
-        android:id="@+id/textview2"
+    <com.beardedhen.androidbootstrap.AwesomeTextView
+        android:id="@+id/destination-tv"
+        app:bootstrapBrand="primary"
         android:layout_width="match_parent"
-        android:layout_height="200dp"
+        android:layout_height="60dp"
+        android:textSize="30sp"
         android:text="ПРИТВОРИМСЯ ЧТО ЭТО ТЕКСТВЬЮ ВЫБРАТЬ МЕСТО-2"
-        android:clickable="true"/>
+        android:clickable="true"
+        android:background="@drawable/back"
+        android:layout_marginStart="5dp"
+        android:layout_marginTop="5dp"
+        android:layout_marginEnd="5dp"
+        android:paddingStart="9dp"
+        android:textAlignment="textStart"/>
 
-    <Button
+    <com.beardedhen.androidbootstrap.BootstrapButton
         android:id="@+id/btn"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:text="Построить" />
+        android:layout_width="match_parent"
+        android:layout_height="50dp"
+        app:roundedCorners="true"
+        android:text="Построить"
+        app:bootstrapBrand="primary"
+        android:layout_marginStart="5dp"
+        android:layout_marginTop="5dp"
+        android:layout_marginEnd="5dp"/>
 
 
 </LinearLayout>

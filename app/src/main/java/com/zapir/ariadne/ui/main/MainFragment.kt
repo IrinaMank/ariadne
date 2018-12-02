@@ -1,13 +1,16 @@
 package com.zapir.ariadne.ui.main
 
+import android.graphics.Bitmap
+import android.graphics.BitmapFactory
 import android.os.Bundle
+import com.onlylemi.mapview.library.layer.PointsLayer
 import com.zapir.ariadne.R
 import com.zapir.ariadne.ui.base.BaseFragment
-import com.zapir.ariadne.model.repositories.PointsRepository
+import com.zapir.ariadne.model.entity.common.Point
 import com.zapir.ariadne.ui.findway.FindWayFragment
-import com.zapir.ariadne.ui.search.SearchFragment
+import com.zapir.ariadne.ui.map.MapLayer
 import kotlinx.android.synthetic.main.fragment_main.*
-import org.koin.android.ext.android.inject
+import java.io.IOException
 
 class MainFragment: BaseFragment() {
     override val layoutRes: Int
@@ -15,16 +18,23 @@ class MainFragment: BaseFragment() {
 
     override fun onActivityCreated(savedInstanceState: Bundle?) {
         super.onActivityCreated(savedInstanceState)
-        val repo: PointsRepository by inject()
-        repo.getStatic()
-        main_fragment_btn.setOnClickListener {
-            activity!!.supportFragmentManager
-                    .beginTransaction()
-                    .replace(R.id.container, MainFragment())
-                    .commit()
-        }//ToDo: remove !!
 
-        search_fragment_btn.setOnClickListener {
+        var bitmap: Bitmap? = null
+        try {
+            bitmap = BitmapFactory.decodeStream(activity?.assets?.open("floor_2.png"))
+        } catch (e: IOException) {
+            e.printStackTrace()
+        }
+
+
+        bitmap?.let {
+            mapview?.loadMap(it)
+        }
+
+        val points = PointsLayer(mapview, listOf(Point(10f, 10f), Point(150f, 50f)))
+        mapview.addLayer(points)
+
+        search_btn.setOnClickListener {
             activity!!.supportFragmentManager
                     .beginTransaction()
                     .replace(R.id.container, FindWayFragment())

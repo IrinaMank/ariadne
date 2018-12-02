@@ -1,32 +1,58 @@
 package com.zapir.ariadne.ui.route
 
 import android.arch.lifecycle.Observer
+import android.graphics.Bitmap
+import android.graphics.BitmapFactory
 import android.os.Bundle
 import android.os.Parcelable
+import com.onlylemi.mapview.library.layer.PointsLayer
 import com.zapir.ariadne.R
 import com.zapir.ariadne.model.entity.Waypoint
+import com.zapir.ariadne.model.entity.common.Point
 import com.zapir.ariadne.presenter.route.RouteViewModel
 import com.zapir.ariadne.ui.base.BaseFragment
+import com.zapir.ariadne.ui.map.MapLayer
+import com.zapir.ariadne.ui.map.RouteLayer
 import kotlinx.android.synthetic.main.fragment_findway.*
+import kotlinx.android.synthetic.main.fragment_main.*
 import kotlinx.android.synthetic.main.fragment_route.*
 import org.koin.android.ext.android.inject
+import java.io.IOException
 
 class RouteFragment: BaseFragment() {
     override val layoutRes: Int
         get() = R.layout.fragment_route
 
     val viewModel: RouteViewModel by inject()
-    val from: Waypoint? by lazy { arguments?.getParcelable("from") as Waypoint }//ToDO: remove hardcode
-    val to: Waypoint? by lazy { arguments?.getParcelable("to") as Waypoint }
+    val from: Waypoint? by lazy { arguments?.getParcelable("from") as? Waypoint }//ToDO: remove
+    // hardcode
+    val to: Waypoint? by lazy { arguments?.getParcelable("to") as? Waypoint }
 
     override fun onActivityCreated(savedInstanceState: Bundle?) {
         super.onActivityCreated(savedInstanceState)
-
-        viewModel.route.observe(this, Observer { text.text = it.toString() })
-
-        if (from != null && to != null) {
-            viewModel.createRoute(from!!, to!!)
+        var bitmap: Bitmap? = null
+        try {
+            bitmap = BitmapFactory.decodeStream(activity?.assets?.open("floor_2.png"))
+        } catch (e: IOException) {
+            e.printStackTrace()
         }
+
+        bitmap?.let {
+            mapview_result?.loadMap(it)
+        }
+
+        viewModel.route.observe(this, Observer {
+            text.text = it.toString()
+            it?.let {
+                val routeLayer = RouteLayer(mapview_result, it)
+                mapview_result.addLayer(routeLayer)
+            }
+
+        })
+
+       // if (from != null && to != null) {
+            viewModel.createRoute(Waypoint(5), Waypoint(4))
+        //}
 
     }
 
