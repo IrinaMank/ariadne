@@ -4,11 +4,8 @@ import android.content.Context
 import android.graphics.*
 import android.util.AttributeSet
 import android.util.TypedValue
-import android.view.MotionEvent
+import android.view.*
 import android.view.MotionEvent.INVALID_POINTER_ID
-import android.view.ScaleGestureDetector
-import android.view.View
-import android.view.WindowManager
 import android.widget.ImageView
 import com.zapir.ariadne.R
 import java.util.*
@@ -22,9 +19,9 @@ class MapView(context: Context, attributeSet: AttributeSet) : ImageView(context,
     private var offsetY = 0f
 
     private var minZoom = 0.15f
-    private var maxZoom = minZoom * 2f//ToDo: fix it with some rule
+    private var maxZoom = minZoom * 2f
 
-    //private var margin = context.resources.getDimension(R.dimen.map_margin)//ToDo: fix it
+    //private var margin = context.resources.getDimension(R.dimen.map_margin)
 
     private var mLastTouchX: Float = 0f
     private var mLastTouchY: Float = 0f
@@ -50,8 +47,20 @@ class MapView(context: Context, attributeSet: AttributeSet) : ImageView(context,
             return true
         }
     }
+    private val tapListener = object  : GestureDetector.SimpleOnGestureListener() {
+        override fun onDoubleTap(e: MotionEvent?): Boolean {
+            if (scaleFactor > minZoom) {
+                scaleFactor = minZoom
+            } else {
+                scaleFactor *= 2f
+            }
+            invalidate()
+            return super.onDoubleTap(e)
+        }
+    }
 
     private val mScaleDetector = ScaleGestureDetector(context, scaleListener)
+    private val tapDetector = GestureDetector(context, tapListener)
 
     init {
         layers = object : ArrayList<MapBaseLayer>() {
@@ -131,6 +140,7 @@ class MapView(context: Context, attributeSet: AttributeSet) : ImageView(context,
 
     override fun onTouchEvent(ev: MotionEvent): Boolean {
         mScaleDetector.onTouchEvent(ev)
+        tapDetector.onTouchEvent(ev)
 
         val action = ev.getAction()
         when (action and MotionEvent.ACTION_MASK) {
