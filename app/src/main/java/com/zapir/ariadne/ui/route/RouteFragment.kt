@@ -39,14 +39,13 @@ class RouteFragment: BaseFragment() {
             e.printStackTrace()
         }
 
-        bitmap?.let {
-            mapview?.loadMap(it)
-        }
-
         viewModel.state.observe(this, Observer {
             when (it) {
                 is WaypointsState.SuccessState ->
                 {
+                    bitmap?.let {
+                        mapview?.loadMap(it)
+                    }
                     val routeLayer = PointsLayer(mapview, it.list)
                     mapview.addLayer(routeLayer)
                 }
