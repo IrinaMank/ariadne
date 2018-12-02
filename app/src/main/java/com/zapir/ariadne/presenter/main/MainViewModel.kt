@@ -15,6 +15,7 @@ class MainViewModel(
     var currentFloor = 0
     set(value) {
         getFloorUrl(value)
+        field = value
     }
 
     init {

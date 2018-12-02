@@ -10,6 +10,7 @@ import com.zapir.ariadne.R
 import com.zapir.ariadne.model.entity.Waypoint
 import com.zapir.ariadne.model.entity.common.Point
 import com.zapir.ariadne.presenter.route.RouteViewModel
+import com.zapir.ariadne.presenter.search.WaypointsState
 import com.zapir.ariadne.ui.base.BaseFragment
 import com.zapir.ariadne.ui.map.MapLayer
 import com.zapir.ariadne.ui.map.RouteLayer
@@ -33,7 +34,7 @@ class RouteFragment: BaseFragment() {
         super.onActivityCreated(savedInstanceState)
         var bitmap: Bitmap? = null
         try {
-            bitmap = BitmapFactory.decodeStream(activity?.assets?.open("floor_2.png"))
+            bitmap = BitmapFactory.decodeStream(activity?.assets?.open("floor_1_1.png"))
         } catch (e: IOException) {
             e.printStackTrace()
         }
@@ -42,10 +43,20 @@ class RouteFragment: BaseFragment() {
             mapview?.loadMap(it)
         }
 
-        viewModel.route.observe(this, Observer {
-            it?.let {
-                val routeLayer = RouteLayer(mapview, it)
-                mapview.addLayer(routeLayer)
+        viewModel.state.observe(this, Observer {
+            when (it) {
+                is WaypointsState.SuccessState ->
+                {
+                    val routeLayer = PointsLayer(mapview, it.list)
+                    mapview.addLayer(routeLayer)
+                }
+                is WaypointsState.FailState -> {
+//                    showProgress(false)
+//                    print(state.error.message)
+                }
+                is WaypointsState.LoadingState -> {
+                    //showProgress(state.loading)
+                }
             }
 
         })
