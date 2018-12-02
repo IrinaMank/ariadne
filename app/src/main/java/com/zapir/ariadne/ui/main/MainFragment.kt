@@ -22,6 +22,7 @@ import com.zapir.ariadne.presenter.search.WaypointsState
 import com.zapir.ariadne.ui.findway.FindWayFragment
 import com.zapir.ariadne.ui.map.MapLayer
 import kotlinx.android.synthetic.main.fragment_main.*
+import kotlinx.android.synthetic.main.layout_map.*
 import org.koin.android.ext.android.inject
 import java.io.IOException
 

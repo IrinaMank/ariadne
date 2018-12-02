@@ -3,12 +3,14 @@ package com.zapir.ariadne.ui.map
 import android.content.Context
 import android.graphics.*
 import android.util.AttributeSet
+import android.util.TypedValue
 import android.view.MotionEvent
 import android.view.MotionEvent.INVALID_POINTER_ID
 import android.view.ScaleGestureDetector
 import android.view.View
 import android.view.WindowManager
 import android.widget.ImageView
+import com.zapir.ariadne.R
 import java.util.*
 import kotlin.math.abs
 
@@ -21,6 +23,8 @@ class MapView(context: Context, attributeSet: AttributeSet) : ImageView(context,
 
     private var minZoom = 0.15f
     private var maxZoom = 0.8f
+
+    private var margin = context.resources.getDimension(R.dimen.map_margin)//ToDo: fix it
 
     private var mLastTouchX: Float = 0f
     private var mLastTouchY: Float = 0f
@@ -75,6 +79,11 @@ class MapView(context: Context, attributeSet: AttributeSet) : ImageView(context,
     fun loadMap(bitmap: Bitmap) {
         loadMap(getPictureFromBitmap(bitmap))
     }
+//
+//    override fun onMeasure(widthMeasureSpec: Int, heightMeasureSpec: Int) {
+//        super.onMeasure(widthMeasureSpec, heightMeasureSpec)
+//        initZoom()
+//    }
 
     private fun loadMap(picture: Picture?) {
             Thread(Runnable {
@@ -199,7 +208,17 @@ class MapView(context: Context, attributeSet: AttributeSet) : ImageView(context,
         val wm = context.getSystemService(Context.WINDOW_SERVICE) as WindowManager
         val display = wm.defaultDisplay
         val screenSize = Point()
+//        screenSize.x = (this as View).width
+//        screenSize.y = (this as View).height
+
+        val px = TypedValue.applyDimension(
+                TypedValue.COMPLEX_UNIT_DIP,
+        margin,
+        resources.displayMetrics
+        )
         display.getSize(screenSize)
+        screenSize.x -= px.toInt()
+        screenSize.y -= px.toInt()
         image?.let {
 
             scaleFactor = screenSize.x.toFloat().div(it.width)
