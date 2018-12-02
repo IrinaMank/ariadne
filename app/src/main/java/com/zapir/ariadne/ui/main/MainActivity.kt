@@ -33,8 +33,7 @@ class MainActivity : AppCompatActivity() {
                 .replace(R.id.container, MainFragment())
                 .commitNow()
 
-        startKoin(context = applicationContext, modules = listOf(modelModule, uiModule))
-        //разрешаем все зависимости
+
     }
 
 }
