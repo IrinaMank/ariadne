@@ -12,6 +12,14 @@ class MainViewModel(
 ): ViewModel() {
 
     var state = MutableLiveData<MainState>()
+    var currentFloor = 0
+    set(value) {
+        getFloorUrl(value)
+    }
+
+    init {
+        getFloorUrl(0)
+    }
 
     fun getFloorUrl(id: Int) = repository.getImageUrl(id)
             .doOnSubscribe {

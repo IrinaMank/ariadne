@@ -22,7 +22,7 @@ class MapView(context: Context, attributeSet: AttributeSet) : ImageView(context,
     private var offsetY = 0f
 
     private var minZoom = 0.15f
-    private var maxZoom = 0.8f
+    private var maxZoom = 0.8f//ToDo: fix it with some rule
 
     private var margin = context.resources.getDimension(R.dimen.map_margin)//ToDo: fix it
 

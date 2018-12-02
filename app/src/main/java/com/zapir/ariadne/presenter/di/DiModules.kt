@@ -29,8 +29,8 @@ val modelModule = module {
     single { get<NstuDatabase>().cashDao() }
     single<PointCache>()
     single<ImageCache>()
-    single { PointsRepository(RouterApi(), get()) }
-    single { ImagesRepository(RouterApi(), get()) }
+    single { PointsRepository(get(), get()) }
+    single { ImagesRepository(get(), get()) }
     single { RouteInteractor(get()) }
 }
 val uiModule = module {
