@@ -3,13 +3,10 @@ package com.zapir.ariadne.ui.map
 import android.content.Context
 import android.graphics.*
 import android.util.AttributeSet
-import android.util.TypedValue
 import android.view.*
 import android.view.MotionEvent.INVALID_POINTER_ID
 import android.widget.ImageView
-import com.zapir.ariadne.R
 import java.util.*
-import kotlin.math.abs
 
 class MapView(context: Context, attributeSet: AttributeSet) : ImageView(context, attributeSet) {
 
@@ -47,7 +44,7 @@ class MapView(context: Context, attributeSet: AttributeSet) : ImageView(context,
             return true
         }
     }
-    private val tapListener = object  : GestureDetector.SimpleOnGestureListener() {
+    private val tapListener = object : GestureDetector.SimpleOnGestureListener() {
         override fun onDoubleTap(e: MotionEvent?): Boolean {
             if (scaleFactor > minZoom) {
                 scaleFactor = minZoom
@@ -64,20 +61,20 @@ class MapView(context: Context, attributeSet: AttributeSet) : ImageView(context,
 
     init {
         layers = object : ArrayList<MapBaseLayer>() {
-            override fun add(layer: MapBaseLayer): Boolean {
+            override fun add(element: MapBaseLayer): Boolean {
                 if (layers.size != 0) {
-                    if (layer.level >= this[this.size - 1].level) {
-                        super.add(layer)
+                    if (element.level >= this[this.size - 1].level) {
+                        super.add(element)
                     } else {
                         for (i in layers.indices) {
-                            if (layer.level < this[i].level) {
-                                super.add(i, layer)
+                            if (element.level < this[i].level) {
+                                super.add(i, element)
                                 break
                             }
                         }
                     }
                 } else {
-                    super.add(layer)
+                    super.add(element)
                 }
                 return true
             }
@@ -95,7 +92,7 @@ class MapView(context: Context, attributeSet: AttributeSet) : ImageView(context,
 //    }
 
     private fun loadMap(picture: Picture?) {
-            Thread(Runnable {
+        Thread(Runnable {
             if (picture != null) {
                 image = picture
                 initZoom()
@@ -120,7 +117,7 @@ class MapView(context: Context, attributeSet: AttributeSet) : ImageView(context,
         super.onDraw(canvas)
         canvas.save()
         pivotX = image?.width?.div(2f) ?: 0f
-        pivotY = image?.height?.div(2f)?: 0f
+        pivotY = image?.height?.div(2f) ?: 0f
 
         canvas.translate(mPosX, mPosY)
         canvas.scale(scaleFactor, scaleFactor)
@@ -171,8 +168,8 @@ class MapView(context: Context, attributeSet: AttributeSet) : ImageView(context,
                     } else {
                         0f
                     }
-                    mPosY = if (mPosY < 0  && offsetY < 0) {
-                       maxOf(mPosY, offsetY)
+                    mPosY = if (mPosY < 0 && offsetY < 0) {
+                        maxOf(mPosY, offsetY)
                     } else {
                         0f
                     }
@@ -215,8 +212,8 @@ class MapView(context: Context, attributeSet: AttributeSet) : ImageView(context,
     }
 
     private fun initZoom() {
-        val wm = context.getSystemService(Context.WINDOW_SERVICE) as WindowManager
-        val display = wm.defaultDisplay
+        //val wm = context.getSystemService(Context.WINDOW_SERVICE) as WindowManager
+       // val display = wm.defaultDisplay
         val screenSize = Point()
         screenSize.x = (this as View).measuredWidth
         screenSize.y = (this as View).measuredHeight
