@@ -2,11 +2,16 @@ package com.zapir.ariadne.ui.map
 
 import android.content.Context
 import android.graphics.*
+import android.os.Parcelable
 import android.util.AttributeSet
 import android.view.*
 import android.view.MotionEvent.INVALID_POINTER_ID
 import android.widget.ImageView
 import java.util.*
+import android.os.Bundle
+import android.util.TypedValue
+import com.zapir.ariadne.R
+
 
 class MapView(context: Context, attributeSet: AttributeSet) : ImageView(context, attributeSet) {
 
@@ -18,7 +23,7 @@ class MapView(context: Context, attributeSet: AttributeSet) : ImageView(context,
     private var minZoom = 0.15f
     private var maxZoom = minZoom * 2f
 
-    //private var margin = context.resources.getDimension(R.dimen.map_margin)
+    private var margin = context.resources.getDimension(R.dimen.map_margin)
 
     private var mLastTouchX: Float = 0f
     private var mLastTouchY: Float = 0f
@@ -91,6 +96,28 @@ class MapView(context: Context, attributeSet: AttributeSet) : ImageView(context,
 //        initZoom()
 //    }
 
+    override fun onSaveInstanceState(): Parcelable {
+        val bundle = Bundle()
+        bundle.putParcelable("state", super.onSaveInstanceState())
+        bundle.putFloat("zoom", this.scaleFactor)
+        bundle.putFloat("posX", this.mPosX)
+        bundle.putFloat("posY", this.mPosY)
+        return bundle
+    }
+
+    override fun onRestoreInstanceState(state: Parcelable?) {
+        if (state is Bundle)
+        {
+            val bundle = state
+            super.onRestoreInstanceState(bundle.getParcelable("state"))
+            this.scaleFactor = bundle.getFloat("zoom")
+            this.mPosX = bundle.getFloat("posX")
+            this.mPosY = bundle.getFloat("posY")
+
+        } else {
+            super.onRestoreInstanceState(state)
+        }
+    }
     private fun loadMap(picture: Picture?) {
         Thread(Runnable {
             if (picture != null) {
@@ -218,19 +245,19 @@ class MapView(context: Context, attributeSet: AttributeSet) : ImageView(context,
         screenSize.x = (this as View).measuredWidth
         screenSize.y = (this as View).measuredHeight
 
-//        val px = TypedValue.applyDimension(
-//                TypedValue.COMPLEX_UNIT_DIP,
-//        margin,
-//        resources.displayMetrics
-//        )
-//        display.getSize(screenSize)
-//        screenSize.x -= px.toInt()
-//        screenSize.y -= px.toInt()
+        val px = TypedValue.applyDimension(
+                TypedValue.COMPLEX_UNIT_DIP,
+        margin,
+        resources.displayMetrics
+        )
+        display.getSize(screenSize)
+        screenSize.x -= px.toInt()
+        screenSize.y -= px.toInt()
         image?.let {
-
-            scaleFactor = screenSize.x.toFloat().div(it.width)
-            minZoom = scaleFactor
-            maxZoom = scaleFactor * 4f
+            val scale = screenSize.x.toFloat().div(it.width)
+            if (scaleFactor == 1f) scaleFactor = scale
+            minZoom = scale
+            maxZoom = scale * 4f
         }
     }
 }
