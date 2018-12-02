@@ -18,7 +18,6 @@
             android:id="@+id/first_floor"
             android:layout_width="0dp"
             android:layout_height="@dimen/floor_btn_height"
-            android:checked="true"
             android:text="1"
             style="@style/floor_radio_btn"
             />

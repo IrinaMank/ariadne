@@ -11,8 +11,9 @@ import com.zapir.ariadne.ui.map.MapBaseLayer
 import com.zapir.ariadne.ui.map.MapView
 import android.graphics.drawable.BitmapDrawable
 import android.graphics.drawable.Drawable
+import com.zapir.ariadne.model.entity.Waypoint
 
-class PointsLayer(mapView: MapView, var marks: List<Point>? = null) :
+class PointsLayer(mapView: MapView, var marks: List<Waypoint>? = null) :
         MapBaseLayer(mapView) {
     private var listener: MarkIsClickListener? = null
 
@@ -96,7 +97,7 @@ class PointsLayer(mapView: MapView, var marks: List<Point>? = null) :
             if (!marks!!.isEmpty()) {
                 for (i in marks!!.indices) {
                     val mark = marks!![i]
-                    val goal = floatArrayOf(mark.x, mark.y)
+                    val goal = floatArrayOf(mark.coordinates.x, mark.coordinates.y)
                     //currentMatrix.mapPoints(goal)
                     //mark ico
                     bmpMark?.let {

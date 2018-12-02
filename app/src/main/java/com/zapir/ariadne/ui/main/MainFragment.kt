@@ -35,12 +35,17 @@ class MainFragment: BaseFragment() {
     override fun onActivityCreated(savedInstanceState: Bundle?) {
         super.onActivityCreated(savedInstanceState)
 
-        floor_btns.setOnCheckedChangeListener { radioGroup, i ->
+        floor_btns.clearCheck()
+        setCheck()
+        floor_btns.setOnCheckedChangeListener{ radioGroup, i ->
             when(i) {
                 R.id.first_floor -> viewModel.currentFloor = 0
                 R.id.second_floor -> viewModel.currentFloor = 1
             }
         }
+
+
+
         viewModel.state.observe(this, Observer { state ->
             when (state) {
                 is MainState.SuccessState ->
@@ -81,6 +86,16 @@ class MainFragment: BaseFragment() {
         }
         else {
             fullscreenProgressView.visibility = View.GONE
+        }
+    }
+
+    private fun setCheck() {
+        when(viewModel.currentFloor) {
+            0 -> first_floor.isChecked = true
+            1 -> second_floor.isChecked = true
+            2 -> third_floor.isChecked = true
+            3 -> forth_floor.isChecked = true
+            4 -> fifth_floor.isChecked = true
         }
     }
 
