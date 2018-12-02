@@ -35,8 +35,12 @@ class MainFragment: BaseFragment() {
     override fun onActivityCreated(savedInstanceState: Bundle?) {
         super.onActivityCreated(savedInstanceState)
 
-        viewModel.getFloorUrl(0)
-
+        floor_btns.setOnCheckedChangeListener { radioGroup, i ->
+            when(i) {
+                R.id.first_floor -> viewModel.currentFloor = 0
+                R.id.second_floor -> viewModel.currentFloor = 1
+            }
+        }
         viewModel.state.observe(this, Observer { state ->
             when (state) {
                 is MainState.SuccessState ->
@@ -70,26 +74,6 @@ class MainFragment: BaseFragment() {
                     .commit()
         }
     }
-
-
-//    fun onRadioButtonClicked(view: View) {
-//        if (view is RadioButton) {
-//            // Is the button now checked?
-//            val checked = view.isChecked
-//
-//            // Check which radio button was clicked
-//            when (view.getId()) {
-//                R.id.first_floor ->
-//                    if (checked) {
-//                        viewModel.getFloorUrl(0)
-//                    }
-//                R.id.second_floor ->
-//                    if (checked) {
-//                        viewModel.getFloorUrl(1)
-//                    }
-//            }
-//        }
-//    }
 
     private fun showProgress(show: Boolean) {
         if (show) {

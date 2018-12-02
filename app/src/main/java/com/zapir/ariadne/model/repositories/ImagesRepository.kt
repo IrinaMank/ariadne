@@ -1,7 +1,6 @@
 package com.zapir.ariadne.model.repositories
 
 import com.zapir.ariadne.model.cache.cachesource.ImageCache
-import com.zapir.ariadne.model.cache.cachesource.PointCache
 import com.zapir.ariadne.model.remote.RouterApi
 import io.reactivex.Single
 
@@ -15,7 +14,7 @@ class ImagesRepository(
                 if (it) {
                     api.getFloorUrls().map {
                         it.pictures.filter {
-                            it.floorID == floorId
+                            it.floorId == floorId
                         }.firstOrNull()
                     }.map {
                         it.image

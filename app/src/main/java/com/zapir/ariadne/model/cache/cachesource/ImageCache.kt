@@ -11,7 +11,7 @@ class ImageCache(
         private val imageDao: ImageDao,
         private val cache: CacheDao
 ): BaseCacheSource(cache) {
-    override fun getEntityName(): String = PointEntity::class.java.simpleName
+    override fun getEntityName(): String = ImageEntity::class.java.simpleName
 
     fun getImageUrls() = imageDao.getImageUrls()
 
