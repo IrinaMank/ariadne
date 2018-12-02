@@ -22,9 +22,9 @@ class MapView(context: Context, attributeSet: AttributeSet) : ImageView(context,
     private var offsetY = 0f
 
     private var minZoom = 0.15f
-    private var maxZoom = 0.8f//ToDo: fix it with some rule
+    private var maxZoom = minZoom * 2f//ToDo: fix it with some rule
 
-    private var margin = context.resources.getDimension(R.dimen.map_margin)//ToDo: fix it
+    //private var margin = context.resources.getDimension(R.dimen.map_margin)//ToDo: fix it
 
     private var mLastTouchX: Float = 0f
     private var mLastTouchY: Float = 0f
@@ -208,21 +208,22 @@ class MapView(context: Context, attributeSet: AttributeSet) : ImageView(context,
         val wm = context.getSystemService(Context.WINDOW_SERVICE) as WindowManager
         val display = wm.defaultDisplay
         val screenSize = Point()
-//        screenSize.x = (this as View).width
-//        screenSize.y = (this as View).height
+        screenSize.x = (this as View).measuredWidth
+        screenSize.y = (this as View).measuredHeight
 
-        val px = TypedValue.applyDimension(
-                TypedValue.COMPLEX_UNIT_DIP,
-        margin,
-        resources.displayMetrics
-        )
-        display.getSize(screenSize)
-        screenSize.x -= px.toInt()
-        screenSize.y -= px.toInt()
+//        val px = TypedValue.applyDimension(
+//                TypedValue.COMPLEX_UNIT_DIP,
+//        margin,
+//        resources.displayMetrics
+//        )
+//        display.getSize(screenSize)
+//        screenSize.x -= px.toInt()
+//        screenSize.y -= px.toInt()
         image?.let {
 
             scaleFactor = screenSize.x.toFloat().div(it.width)
             minZoom = scaleFactor
+            maxZoom = scaleFactor * 4f
         }
     }
 }
