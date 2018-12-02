@@ -16,4 +16,22 @@
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent" />
 
+    <include layout="@layout/layout_progress"
+        android:id="@+id/fullscreenProgressView"/>
+
+    <!--<Button-->
+    <!--android:id="@+id/main_fragment_btn"-->
+    <!--android:layout_width="match_parent"-->
+    <!--android:layout_height="wrap_content"-->
+    <!--android:text="First floor"-->
+    <!--app:layout_constraintBottom_toTopOf="@+id/search_fragment_btn"-->
+    <!--app:layout_constraintTop_toTopOf="parent" />-->
+
+    <!--<Button-->
+    <!--android:id="@+id/search_fragment_btn"-->
+    <!--android:layout_width="match_parent"-->
+    <!--android:layout_height="wrap_content"-->
+    <!--android:text="Search fragment"-->
+    <!--app:layout_constraintTop_toBottomOf="@+id/main_fragment_btn" />-->
+
 </android.support.constraint.ConstraintLayout>

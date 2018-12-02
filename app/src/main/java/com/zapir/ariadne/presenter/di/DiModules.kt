@@ -2,12 +2,14 @@ package com.zapir.ariadne.presenter.di
 
 import android.arch.persistence.room.Database
 import android.arch.persistence.room.Room
+import com.zapir.ariadne.model.cache.cachesource.ImageCache
 import com.zapir.ariadne.model.cache.cachesource.PointCache
 import com.zapir.ariadne.model.cache.db.NstuDatabase
 import com.zapir.ariadne.model.cache.db.NstuDatabase_Impl
 import com.zapir.ariadne.model.interactors.RouteInteractor
 import com.zapir.ariadne.model.mock.RouterApiMock
 import com.zapir.ariadne.model.remote.RouterApi
+import com.zapir.ariadne.model.repositories.ImagesRepository
 import com.zapir.ariadne.model.repositories.PointsRepository
 import com.zapir.ariadne.presenter.main.MainViewModel
 import com.zapir.ariadne.presenter.route.RouteViewModel
@@ -23,13 +25,16 @@ val modelModule = module {
     single { Room.databaseBuilder(androidContext(), NstuDatabase::class.java, NstuDatabase::class.java
             .simpleName).fallbackToDestructiveMigration().build() } //development migration mode
     single { get<NstuDatabase>().pointDao() }
+    single { get<NstuDatabase>().imageDao() }
     single { get<NstuDatabase>().cashDao() }
     single<PointCache>()
+    single<ImageCache>()
     single { PointsRepository(RouterApi(), get()) }
+    single { ImagesRepository(RouterApi(), get()) }
     single { RouteInteractor(get()) }
 }
 val uiModule = module {
     viewModel { SearchViewModel(get()) }
-    viewModel { MainViewModel() }
+    viewModel { MainViewModel(get()) }
     viewModel { RouteViewModel(get()) }
 }
