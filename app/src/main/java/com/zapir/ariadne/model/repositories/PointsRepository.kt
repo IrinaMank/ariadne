@@ -2,7 +2,6 @@ package com.zapir.ariadne.model.repositories
 
 import com.zapir.ariadne.model.cache.cachesource.PointCache
 import com.zapir.ariadne.model.entity.Waypoint
-import com.zapir.ariadne.model.mock.RouterApiMock
 import com.zapir.ariadne.model.remote.RouterApi
 import io.reactivex.Single
 
@@ -27,7 +26,7 @@ class PointsRepository(
             }
     }
 
-    fun getStatic() = api.getSatic().subscribe(
+    fun getStatic() = api.getFloorUrls().subscribe(
             {
                 System.out.print("1")
             },

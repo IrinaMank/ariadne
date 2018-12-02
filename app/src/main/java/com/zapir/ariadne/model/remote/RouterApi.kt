@@ -6,5 +6,5 @@ class RouterApi {
 
     fun getBuilding() = routerService.getBuilding()
 
-    fun getSatic() = routerService.getStatic()
+    fun getFloorUrls() = routerService.getFloorUrls()
 }

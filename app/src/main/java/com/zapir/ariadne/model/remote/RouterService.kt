@@ -11,6 +11,6 @@ interface RouterService {
     fun getBuilding(): Single<Building>
 
     @GET("/static/")
-    fun getStatic(): Single<Static>
+    fun getFloorUrls(): Single<Static>
 
 }

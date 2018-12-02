@@ -49,6 +49,9 @@
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent" />
 
+    <include layout="@layout/layout_progress"
+        android:id="@+id/fullscreenProgressView"/>
+
     <!--<Button-->
     <!--android:id="@+id/main_fragment_btn"-->
     <!--android:layout_width="match_parent"-->
