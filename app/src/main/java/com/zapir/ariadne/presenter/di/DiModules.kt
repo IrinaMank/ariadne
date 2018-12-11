@@ -36,5 +36,5 @@ val modelModule = module {
 val uiModule = module {
     viewModel { SearchViewModel(get()) }
     viewModel { MainViewModel(get()) }
-    viewModel { RouteViewModel(get()) }
+    viewModel { RouteViewModel(get(), get()) }
 }

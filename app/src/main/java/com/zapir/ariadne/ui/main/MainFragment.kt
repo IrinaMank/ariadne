@@ -41,6 +41,9 @@ class MainFragment: BaseFragment() {
             when(i) {
                 R.id.first_floor -> viewModel.currentFloor = 0
                 R.id.second_floor -> viewModel.currentFloor = 1
+                R.id.third_floor -> viewModel.currentFloor = 2
+                R.id.forth_floor -> viewModel.currentFloor = 3
+                R.id.fifth_floor -> viewModel.currentFloor = 4
             }
         }
 

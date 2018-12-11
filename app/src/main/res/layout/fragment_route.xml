@@ -6,4 +6,7 @@
 
     <include layout="@layout/layout_map"/>
 
+    <include layout="@layout/layout_progress"
+        android:id="@+id/fullscreenProgressView"/>
+
 </android.support.constraint.ConstraintLayout>
