@@ -14,7 +14,7 @@ abstract class BaseCacheSource(
                 .flatMap {
                         val currentTime = System.currentTimeMillis()
                         val lastUpdateTime = it.expirationTime
-                        Single.just(currentTime - lastUpdateTime > 60 * 60 * 1000)
+                        Single.just(currentTime - lastUpdateTime > 0)
                 }
                 .onErrorReturnItem(true)
 
