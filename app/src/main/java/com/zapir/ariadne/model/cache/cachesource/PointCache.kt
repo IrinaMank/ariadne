@@ -12,6 +12,7 @@ class PointCache(
     override fun getEntityName(): String = PointEntity::class.java.simpleName
 
     fun getPoints() = pointDao.getPoints()
+    fun getPoints(id: Int) = pointDao.getPoints(id)
 
     fun saveRepositories(list: List<PointEntity>) = operationWithCache(list) {
         pointDao.insert(list)

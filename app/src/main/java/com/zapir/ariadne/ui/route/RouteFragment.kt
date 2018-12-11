@@ -2,9 +2,7 @@ package com.zapir.ariadne.ui.route
 
 import android.arch.lifecycle.Observer
 import android.graphics.Bitmap
-import android.graphics.BitmapFactory
 import android.os.Bundle
-import android.os.Parcelable
 import android.view.View
 import com.bumptech.glide.Glide
 import com.bumptech.glide.request.target.SimpleTarget
@@ -16,11 +14,10 @@ import com.zapir.ariadne.presenter.main.MainState
 import com.zapir.ariadne.presenter.route.RouteViewModel
 import com.zapir.ariadne.presenter.search.WaypointsState
 import com.zapir.ariadne.ui.base.BaseFragment
-import com.zapir.ariadne.ui.map.RouteLayer
+import com.zapir.ariadne.ui.map.DebugLayer
 import kotlinx.android.synthetic.main.fragment_route.*
 import kotlinx.android.synthetic.main.layout_map.*
 import org.koin.android.ext.android.inject
-import java.io.IOException
 
 class RouteFragment: BaseFragment() {
     override val layoutRes: Int
@@ -31,6 +28,8 @@ class RouteFragment: BaseFragment() {
     // hardcode
     val to: Waypoint? by lazy { arguments?.getParcelable("to") as? Waypoint }
 
+
+    var currPoint = Waypoint(4)
     override fun onActivityCreated(savedInstanceState: Bundle?) {
         super.onActivityCreated(savedInstanceState)
         floor_btns.clearCheck()
@@ -56,6 +55,8 @@ class RouteFragment: BaseFragment() {
                             .into(object  : SimpleTarget<Bitmap>() {
                                 override fun onResourceReady(resource: Bitmap, transition: Transition<in Bitmap>?) {
                                     mapview.loadMap(resource)
+                                    val pointLayer = PointsLayer(mapview, listOf())
+                                    mapview.addAndClearLayer(pointLayer)
                                     viewModel.pointFromFloor(viewModel.currentFloor)
                                 }
                             })
@@ -80,8 +81,14 @@ class RouteFragment: BaseFragment() {
                 is WaypointsState.SuccessState ->
                 {
                     showProgress(false)
-                    val pointLayer = PointsLayer(mapview, state.list)
-                    mapview.addLayer(pointLayer)
+
+                    for (item in state.list) {
+                        currPoint = item
+//                        val pointLayer = PointsLayer(mapview, listOf(item))
+//                        mapview.addLayer(pointLayer)
+                        viewModel.debugConn(currPoint, item.id)
+                    }
+
                 }
                 is WaypointsState.FailState -> {
                     showProgress(false)
@@ -92,6 +99,24 @@ class RouteFragment: BaseFragment() {
                 }
             }
         })
+
+        viewModel.stateCon.subscribe {  state ->
+            when (state) {
+                is WaypointsState.SuccessState ->
+                {
+                    showProgress(false)
+                    val pointLayer = DebugLayer(mapview, state.list.last(), state.list)
+                    mapview.addLayer(pointLayer)
+                }
+                is WaypointsState.FailState -> {
+                    showProgress(false)
+                    print(state.error.message)
+                }
+                is WaypointsState.LoadingState -> {
+                    showProgress(state.loading)
+                }
+            }
+        }
 
     }
 

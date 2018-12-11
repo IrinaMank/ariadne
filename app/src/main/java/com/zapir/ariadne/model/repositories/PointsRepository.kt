@@ -27,6 +27,11 @@ class PointsRepository(
             }
     }
 
+    fun getPointsById(id: Int): Single<Waypoint> =
+                    cache.getPoints(id).map {
+                         mapper.fromCacheToRemote(it)
+            }
+
     fun getPointsOnFloor(id: Int) =
             getPoints()
                     .flatMapObservable { list -> Observable.fromIterable(list)}

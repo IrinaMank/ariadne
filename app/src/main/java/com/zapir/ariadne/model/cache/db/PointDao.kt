@@ -15,9 +15,13 @@ abstract class PointDao {
     @Query("SELECT * FROM PointEntity")
     protected abstract fun getRawPoints(): Single<List<PointEntity>>
 
+    @Query("SELECT * FROM PointEntity WHERE id = :id")
+    protected abstract fun getRawPoints(id: Int): Single<PointEntity>
+
     @Insert(onConflict = OnConflictStrategy.REPLACE)
     abstract fun insert(obj: List<PointEntity>): List<Long>
 
     fun getPoints() = getRawPoints()
+    fun getPoints(id: Int) = getRawPoints(id)
 
 }

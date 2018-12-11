@@ -127,6 +127,11 @@ class MapView(context: Context, attributeSet: AttributeSet) : ImageView(context,
     }
 
     fun addLayer(layer: MapBaseLayer) {
+        layers.add(layer)
+        invalidate()
+    }
+
+    fun addAndClearLayer(layer: MapBaseLayer) {
         layers.clear()
         layers.add(layer)
         invalidate()
