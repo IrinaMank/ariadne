@@ -15,7 +15,8 @@ class PointMapper {
                     remote.coordinates.x,
                     remote.coordinates.y,
                     remote.type,
-                    remote.relatedPoints
+                    remote.relatedPoints,
+                    remote.floor
             )
 
     fun fromCacheToRemote(cache: PointEntity) =
@@ -24,6 +25,7 @@ class PointMapper {
                     cache.name,
                     Point(cache.x, cache.y),
                     cache.type,
-                    cache.relatedPoints
+                    cache.relatedPoints,
+                    cache.floor
             )
 }

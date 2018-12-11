@@ -13,5 +13,6 @@ data class PointEntity(
     val x: Float,
     val y: Float,
     val type: String,
-    val relatedPoints:List<Int>
+    val relatedPoints:List<Int>,
+    val floor: Int
 )

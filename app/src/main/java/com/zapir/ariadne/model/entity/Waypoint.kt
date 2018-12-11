@@ -11,5 +11,6 @@ data class Waypoint(
         val name: String? = null,
         val coordinates: Point = Point(),
         val type: String = PointType.LADDER.value,
-        val relatedPoints:List<Int> = emptyList()
+        val relatedPoints:List<Int> = emptyList(),
+        val floor: Int = 0
 ): Parcelable

@@ -29,7 +29,7 @@ class RouteViewModel(
         }
 
     init {
-        getFloorUrl(0)
+       // getFloorUrl(0)
     }
 
     fun getFloorUrl(id: Int) = repository.getImageUrl(id)
@@ -54,6 +54,27 @@ class RouteViewModel(
 
     fun createRoute(from: Waypoint, to: Waypoint) {
         val result = interactor.getPoints()
+                .doOnSubscribe {
+                    state.postValue(WaypointsState.LoadingState(true))
+                }
+                .doAfterTerminate {
+                    state.postValue(WaypointsState.LoadingState(false))
+                }
+                .subscribeOn(Schedulers.io())
+                .observeOn(AndroidSchedulers.mainThread())
+                .subscribe(
+                        {
+                            state.postValue(WaypointsState.SuccessState(it))
+                        },
+                        {
+                            state.postValue(WaypointsState.FailState(it))
+
+                        }
+                )
+    }
+
+    fun pointFromFloor(id: Int) {
+        val result = interactor.getPointsOnFloor(id)
                 .doOnSubscribe {
                     state.postValue(WaypointsState.LoadingState(true))
                 }

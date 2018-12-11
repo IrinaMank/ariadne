@@ -3,6 +3,7 @@ package com.zapir.ariadne.model.repositories
 import com.zapir.ariadne.model.cache.cachesource.PointCache
 import com.zapir.ariadne.model.entity.Waypoint
 import com.zapir.ariadne.model.remote.RouterApi
+import io.reactivex.Observable
 import io.reactivex.Single
 
 class PointsRepository(
@@ -25,6 +26,12 @@ class PointsRepository(
                 }
             }
     }
+
+    fun getPointsOnFloor(id: Int) =
+            getPoints()
+                    .flatMapObservable { list -> Observable.fromIterable(list)}
+                    .filter { point -> point.floor == id }
+                    .toList()
 
     fun getStatic() = api.getFloorUrls().subscribe(
             {

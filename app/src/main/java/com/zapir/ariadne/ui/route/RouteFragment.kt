@@ -9,6 +9,7 @@ import android.view.View
 import com.bumptech.glide.Glide
 import com.bumptech.glide.request.target.SimpleTarget
 import com.bumptech.glide.request.transition.Transition
+import com.onlylemi.mapview.library.layer.PointsLayer
 import com.zapir.ariadne.R
 import com.zapir.ariadne.model.entity.Waypoint
 import com.zapir.ariadne.presenter.main.MainState
@@ -55,6 +56,7 @@ class RouteFragment: BaseFragment() {
                             .into(object  : SimpleTarget<Bitmap>() {
                                 override fun onResourceReady(resource: Bitmap, transition: Transition<in Bitmap>?) {
                                     mapview.loadMap(resource)
+                                    viewModel.pointFromFloor(viewModel.currentFloor)
                                 }
                             })
                 }
@@ -78,8 +80,8 @@ class RouteFragment: BaseFragment() {
                 is WaypointsState.SuccessState ->
                 {
                     showProgress(false)
-                    val routeLayer = RouteLayer(mapview, state.list)
-                    mapview.addLayer(routeLayer)
+                    val pointLayer = PointsLayer(mapview, state.list)
+                    mapview.addLayer(pointLayer)
                 }
                 is WaypointsState.FailState -> {
                     showProgress(false)
@@ -91,6 +93,12 @@ class RouteFragment: BaseFragment() {
             }
         })
 
+    }
+
+    override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
+        super.onViewCreated(view, savedInstanceState)
+
+        viewModel.getFloorUrl(0)
     }
 
     private fun showProgress(show: Boolean) {

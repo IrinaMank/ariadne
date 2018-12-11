@@ -38,6 +38,8 @@ class MapView(context: Context, attributeSet: AttributeSet) : ImageView(context,
 
     private var image: Picture? = null
 
+    private var routeLayer: RouteLayer? = null
+
     private var scaleFactor = 1f
     private val scaleListener = object : ScaleGestureDetector.SimpleOnScaleGestureListener() {
 
@@ -125,6 +127,7 @@ class MapView(context: Context, attributeSet: AttributeSet) : ImageView(context,
     }
 
     fun addLayer(layer: MapBaseLayer) {
+        layers.clear()
         layers.add(layer)
         invalidate()
     }
