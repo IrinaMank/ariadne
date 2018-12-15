@@ -6,14 +6,10 @@
 
     <include
         layout="@layout/layout_map"
-        android:id="@+id/result_map"
-        android:visibility="gone"/>
+        android:id="@+id/result_map"/>
 
     <include
         layout="@layout/layout_progress"
-        android:id="@+id/fullscreenProgressView"/>
-
-    <include layout="@layout/layout_progress"
         android:id="@+id/fullscreenProgressView"/>
 
 </android.support.constraint.ConstraintLayout>

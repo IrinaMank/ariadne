@@ -16,6 +16,6 @@ interface RouterService {
 
     @GET("/route/")
     fun getRoute(@Query("from") from: Int,
-                 @Query("to") to: Int): Single<Building>
+                 @Query("to") to: Int): Single<List<Int>>
 
 }

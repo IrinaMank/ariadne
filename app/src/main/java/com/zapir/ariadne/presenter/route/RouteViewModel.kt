@@ -10,6 +10,7 @@ import com.zapir.ariadne.presenter.main.MainState
 import com.zapir.ariadne.presenter.search.WaypointsState
 import io.reactivex.Observable
 import io.reactivex.android.schedulers.AndroidSchedulers
+import io.reactivex.rxkotlin.zipWith
 import io.reactivex.schedulers.Schedulers
 import io.reactivex.subjects.BehaviorSubject
 
@@ -19,21 +20,28 @@ class RouteViewModel(
         private val repository: ImagesRepository
 ): ViewModel() {
 
-    val route = BehaviorSubject.create<List<Waypoint>>()// паттерн обсервер. Когда постим сюда новые
-    // данные, они рассылаются по подписчикам
-    var state = MutableLiveData<WaypointsState>()
+    var state = MutableLiveData<RouteState>()
     var stateCon =BehaviorSubject.create<WaypointsState>()
     var stateImages = MutableLiveData<MainState>()
 
-    var currentFloor = 0
-        set(value) {
-            getFloorUrl(value)
-            field = value
-        }
+    private var from: Int = 0
+    private var to: Int = 0
 
-    init {
-       // getFloorUrl(0)
+    private var route = emptyList<Waypoint>()
+    private var floorImage = ""
+
+    var currentFloor = 1
+    set(value) {
+        getFloorUrl(value)
+        field = value
     }
+
+    fun setDestinations(from: Int, to: Int) {
+        this.from = from
+        this.to = to
+        createRoute(from, to)
+    }
+
 
     fun getFloorUrl(id: Int) = repository.getImageUrl(id)
             .doOnSubscribe {
@@ -46,7 +54,8 @@ class RouteViewModel(
             .observeOn(AndroidSchedulers.mainThread())
             .subscribe(
                     {
-                        stateImages.postValue(MainState.SuccessState(it))
+                        state.postValue(RouteState.SuccessState(route.filter { it
+                                .floor==currentFloor }, it))
                     },
                     {
                         stateImages.postValue(MainState.FailState(it))
@@ -54,52 +63,36 @@ class RouteViewModel(
                     }
             )
 
-
     fun createRoute(from: Int, to: Int) {
         val result = interactor.getRoute(from, to)
                 .doOnSubscribe {
-                    state.postValue(WaypointsState.LoadingState(true))
+                    state.postValue(RouteState.LoadingState(true))
                 }
                 .doAfterTerminate {
-                    state.postValue(WaypointsState.LoadingState(false))
+                    state.postValue(RouteState.LoadingState(false))
                 }
+                .flattenAsObservable {it}
+                .flatMap {
+                    interactor.getPointsById(it).toObservable()
+                }
+                .toList()
+                .zipWith(repository.getImageUrl(currentFloor))
                 .subscribeOn(Schedulers.io())
                 .observeOn(AndroidSchedulers.mainThread())
                 .subscribe(
                         {
-                            state.postValue(WaypointsState.SuccessState(it.points))
+                            route = it.first
+                            floorImage = it.second
+                            state.postValue(RouteState.SuccessState(it.first.filter { it.floor ==
+                                    currentFloor }, it
+                                    .second))
                         },
                         {
-                            state.postValue(WaypointsState.FailState(it))
+                            state.postValue(RouteState.FailState(it))
 
                         }
                 )
     }
-
-    fun pointFromFloor(id: Int) {
-        val result = interactor.getPointsOnFloor(id)
-                .doOnSubscribe {
-                    state.postValue(WaypointsState.LoadingState(true))
-                }
-                .doAfterTerminate {
-                    state.postValue(WaypointsState.LoadingState(false))
-                }
-                .subscribeOn(Schedulers.io())
-                .observeOn(AndroidSchedulers.mainThread())
-                .subscribe(
-                        {
-                            for (item in it) {
-                                debugConn(item, item.id)
-                            }
-                            state.postValue(WaypointsState.SuccessState(it))
-                        },
-                        {
-                            state.postValue(WaypointsState.FailState(it))
-
-                        }
-                )
-    }
-
 
     fun debugConn(curr: Waypoint, id: Int) {
         val result = interactor.getPointsById(id)
