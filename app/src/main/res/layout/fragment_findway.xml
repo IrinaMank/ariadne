@@ -7,7 +7,7 @@
 
     <com.beardedhen.androidbootstrap.AwesomeTextView
         android:id="@+id/source-tv"
-        app:bootstrapBrand="primary"
+        app:bootstrapBrand="secondary"
         android:layout_width="match_parent"
         android:layout_height="60dp"
         android:textSize="30sp"
@@ -22,7 +22,7 @@
 
     <com.beardedhen.androidbootstrap.AwesomeTextView
         android:id="@+id/destination-tv"
-        app:bootstrapBrand="primary"
+        app:bootstrapBrand="secondary"
         android:layout_width="match_parent"
         android:layout_height="60dp"
         android:textSize="30sp"
@@ -41,7 +41,7 @@
         android:layout_height="50dp"
         app:roundedCorners="true"
         android:text="Построить"
-        app:bootstrapBrand="primary"
+        app:bootstrapBrand="danger"
         android:layout_marginStart="5dp"
         android:layout_marginTop="5dp"
         android:layout_marginEnd="5dp"/>

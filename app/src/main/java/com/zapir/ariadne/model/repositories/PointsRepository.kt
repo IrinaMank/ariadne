@@ -38,6 +38,10 @@ class PointsRepository(
                     .filter { point -> point.floor == id }
                     .toList()
 
+
+
+    fun getRoute(from: Int, to: Int) = api.getRoute(from, to)
+
     fun getStatic() = api.getFloorUrls().subscribe(
             {
                 System.out.print("1")

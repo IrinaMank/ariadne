@@ -4,7 +4,14 @@
     android:layout_height="match_parent"
     xmlns:app="http://schemas.android.com/apk/res-auto">
 
-    <include layout="@layout/layout_map"/>
+    <include
+        layout="@layout/layout_map"
+        android:id="@+id/result_map"
+        android:visibility="gone"/>
+
+    <include
+        layout="@layout/layout_progress"
+        android:id="@+id/fullscreenProgressView"/>
 
     <include layout="@layout/layout_progress"
         android:id="@+id/fullscreenProgressView"/>
