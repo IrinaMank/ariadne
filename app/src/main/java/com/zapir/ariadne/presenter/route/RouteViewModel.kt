@@ -18,8 +18,8 @@ class RouteViewModel(
     // данные, они рассылаются по подписчикам
     var state = MutableLiveData<WaypointsState>()
 
-    fun createRoute(from: Waypoint, to: Waypoint) {
-        val result = interactor.getPoints()
+    fun createRoute(from: Int, to: Int) {
+        val result = interactor.getRoute(from, to)
                 .doOnSubscribe {
                     state.postValue(WaypointsState.LoadingState(true))
                 }
@@ -30,7 +30,7 @@ class RouteViewModel(
                 .observeOn(AndroidSchedulers.mainThread())
                 .subscribe(
                         {
-                            state.postValue(WaypointsState.SuccessState(it))
+                            state.postValue(WaypointsState.SuccessState(it.points))
                         },
                         {
                             state.postValue(WaypointsState.FailState(it))

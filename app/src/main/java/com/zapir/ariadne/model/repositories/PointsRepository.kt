@@ -26,6 +26,8 @@ class PointsRepository(
             }
     }
 
+    fun getRoute(from: Int, to: Int) = api.getRoute(from, to)
+
     fun getStatic() = api.getFloorUrls().subscribe(
             {
                 System.out.print("1")

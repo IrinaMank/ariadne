@@ -5,6 +5,7 @@ import android.graphics.Bitmap
 import android.graphics.BitmapFactory
 import android.os.Bundle
 import android.os.Parcelable
+import android.view.View
 import com.onlylemi.mapview.library.layer.PointsLayer
 import com.zapir.ariadne.R
 import com.zapir.ariadne.model.entity.Waypoint
@@ -12,10 +13,6 @@ import com.zapir.ariadne.model.entity.common.Point
 import com.zapir.ariadne.presenter.route.RouteViewModel
 import com.zapir.ariadne.presenter.search.WaypointsState
 import com.zapir.ariadne.ui.base.BaseFragment
-import com.zapir.ariadne.ui.map.MapLayer
-import com.zapir.ariadne.ui.map.RouteLayer
-import kotlinx.android.synthetic.main.fragment_findway.*
-import kotlinx.android.synthetic.main.fragment_main.*
 import kotlinx.android.synthetic.main.fragment_route.*
 import kotlinx.android.synthetic.main.layout_map.*
 import org.koin.android.ext.android.inject
@@ -32,16 +29,6 @@ class RouteFragment: BaseFragment() {
 
     override fun onActivityCreated(savedInstanceState: Bundle?) {
         super.onActivityCreated(savedInstanceState)
-        var bitmap: Bitmap? = null
-        try {
-            bitmap = BitmapFactory.decodeStream(activity?.assets?.open("floor_1_1.png"))
-        } catch (e: IOException) {
-            e.printStackTrace()
-        }
-
-        bitmap?.let {
-            mapview?.loadMap(it)
-        }
 
         viewModel.state.observe(this, Observer {
             when (it) {
@@ -51,20 +38,31 @@ class RouteFragment: BaseFragment() {
                     mapview.addLayer(routeLayer)
                 }
                 is WaypointsState.FailState -> {
-//                    showProgress(false)
-//                    print(state.error.message)
+                    showProgress(false)
+                    print(it.error.message)
                 }
                 is WaypointsState.LoadingState -> {
-                    //showProgress(state.loading)
+                    showProgress(it.loading)
                 }
             }
 
         })
 
-       // if (from != null && to != null) {
-            viewModel.createRoute(Waypoint(5), Waypoint(4))
-        //}
+        if (from != null && to != null) {
+            viewModel.createRoute(from!!.id, to!!.id)
+        }
 
+    }
+
+    private fun showProgress(show: Boolean) {
+        if (show) {
+            fullscreenProgressView.visibility = View.VISIBLE
+            result_map.visibility = View.GONE
+        }
+        else {
+            fullscreenProgressView.visibility = View.GONE
+            result_map.visibility = View.VISIBLE
+        }
     }
 
     companion object {
