@@ -1,4 +1,4 @@
-package com.onlylemi.mapview.library.layer
+package com.zapir.ariadne.ui.map
 
 import android.graphics.Bitmap
 import android.graphics.Canvas
@@ -6,9 +6,6 @@ import android.graphics.Matrix
 import android.graphics.Paint
 import android.view.MotionEvent
 import com.zapir.ariadne.R
-import com.zapir.ariadne.model.entity.common.Point
-import com.zapir.ariadne.ui.map.MapBaseLayer
-import com.zapir.ariadne.ui.map.MapView
 import android.graphics.drawable.BitmapDrawable
 import android.graphics.drawable.Drawable
 import com.zapir.ariadne.model.entity.Waypoint
@@ -35,7 +32,7 @@ class PointsLayer(mapView: MapView, var marks: List<Waypoint>? = null) :
     private fun initLayer() {
         radiusMark = setValue(10f)
 
-        bmpMark = drawableToBitmap(mapView.context.resources.getDrawable(R.drawable.ic_point))
+        bmpMark = mapView.context.resources.getDrawable(R.drawable.ic_point).drawableToBitmap()
         //bmpMarkTouch = BitmapFactory.decodeResource(mapView.getResources(), R.mipmap.mark_touch)
 
         paint = Paint()
@@ -43,24 +40,24 @@ class PointsLayer(mapView: MapView, var marks: List<Waypoint>? = null) :
         paint!!.style = Paint.Style.FILL_AND_STROKE
     }
 
-    fun drawableToBitmap(drawable: Drawable): Bitmap {
+    fun Drawable.drawableToBitmap(): Bitmap {
         var bitmap: Bitmap? = null
 
-        if (drawable is BitmapDrawable) {
-            if (drawable.bitmap != null) {
-                return drawable.bitmap
+        if (this is BitmapDrawable) {
+            if (this.bitmap != null) {
+                return this.bitmap
             }
         }
 
-        if (drawable.intrinsicWidth <= 0 || drawable.intrinsicHeight <= 0) {
+        if (this.intrinsicWidth <= 0 || this.intrinsicHeight <= 0) {
             bitmap = Bitmap.createBitmap(1, 1, Bitmap.Config.ARGB_8888) // Single color bitmap will be created of 1x1 pixel
         } else {
-            bitmap = Bitmap.createBitmap(drawable.intrinsicWidth, drawable.intrinsicHeight, Bitmap.Config.ARGB_8888)
+            bitmap = Bitmap.createBitmap(this.intrinsicWidth, this.intrinsicHeight, Bitmap.Config.ARGB_8888)
         }
 
         val canvas = Canvas(bitmap!!)
-        drawable.setBounds(0, 0, canvas.width, canvas.height)
-        drawable.draw(canvas)
+        this.setBounds(0, 0, canvas.width, canvas.height)
+        this.draw(canvas)
         return bitmap
     }
 
